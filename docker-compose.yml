@@ -1,0 +1,30 @@
+version: '3.0'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    entrypoint: '/app/docker/app/entrypoint.dev.sh'
+    command: poetry run python ./manage.py runserver 0.0.0.0:8000 --insecure
+    working_dir: /app
+    volumes:
+      - ./docker/app/.bashrc:/root/.bashrc:ro
+      - .:/app:cached
+    environment:
+      DJANGO_ENV: local
+      POSTGRES_DATABASE: candfans
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: docker
+      POSTGRES_HOSTNAME: db
+      POSTGRES_PORT: 5432
+      SECRET_KEY: $SECRET_KEY
+    ports:
+      - "8001:8000"
+    links:
+      - db
+  db:
+    image: postgres:14.11-bullseye
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=candfans
