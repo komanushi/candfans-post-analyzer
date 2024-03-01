@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+{% if candfans_user %}
+<ul>
+  <li>{{ candfans_user.user_id }}</li>
+  <li>{{ candfans_user.user_code }}</li>
+  <li>{{ candfans_user.user_name }}</li>
+  <li>{{ candfans_user.last_synced_at }}</li>
+</ul>
+{% else %}
+  このユーザ({{ user_code }})は存在しません。
+{% endif %}
+</body>
+</html>
