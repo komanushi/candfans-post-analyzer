@@ -16,3 +16,10 @@ class AnalyzerServiceTest(TestCase):
         ))
         self.assertEqual(created_user.user_id, 1)
         self.assertEqual(created_user.last_synced_at, None)
+
+    async def test_get_candfans_user_by_user_code(self):
+        user = await CandfansUserFactory.create()
+        user_model = await analyzer_sv.get_candfans_user_by_user_code(user_code=user.user_code)
+        self.assertEqual(user_model.user_id, user.user_id)
+        self.assertEqual(user_model.user_code, user.user_code)
+        self.assertEqual(user_model.user_name, user.user_name)

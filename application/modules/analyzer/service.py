@@ -10,8 +10,8 @@ async def create_candfans_user(candfans_user: CandfansUserModel) -> CandfansUser
     return converter.convert_to_candfans_user_model(created_user)
 
 
-async def get_candfans_user_by_user_id(user_code: str) -> Optional[CandfansUserModel]:
+async def get_candfans_user_by_user_code(user_code: str) -> Optional[CandfansUserModel]:
     candfans_user = await CandfansUser.get_by_user_code(user_code=user_code)
     if not candfans_user:
         return None
-    return await converter.convert_to_candfans_user_model(candfans_user)
+    return converter.convert_to_candfans_user_model(candfans_user)

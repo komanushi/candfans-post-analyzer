@@ -20,9 +20,5 @@ class CandfansUser(models.Model):
         )
 
     @classmethod
-    async def get_by_user_id(cls, user_id: int) -> Optional['CandfansUser']:
-        return await cls.objects.afilter(user_id=user_id).first()
-
-    @classmethod
     async def get_by_user_code(cls, user_code: str) -> Optional['CandfansUser']:
-        return await cls.objects.afilter(user_code=user_code).first()
+        return await cls.objects.filter(user_code=user_code).afirst()
