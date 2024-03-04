@@ -9,7 +9,7 @@
 <ul>
   <li>{{ candfans_user.user_id }}</li>
   <li>{{ candfans_user.user_code }}</li>
-  <li>{{ candfans_user.user_name }}</li>
+  <li>{{ candfans_user.username }}</li>
   <li>{{ candfans_user.last_synced_at }}</li>
 </ul>
 <form method="POST" action="{% url 'candfans_user_refresh' user_code %}">

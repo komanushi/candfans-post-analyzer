@@ -33,7 +33,7 @@ services:
       context: .
       dockerfile: ./docker/app/Dockerfile
     entrypoint: '/app/docker/app/entrypoint.dev.sh'
-    command: poetry run python ./manage.py rqworker default
+    command: poetry run watchmedo auto-restart -d ./application -R -p '*.py' --interval 3.0 -- poetry run python ./manage.py rqworker default
     working_dir: /app
     volumes:
       - ./docker/app/.bashrc:/root/.bashrc:ro
