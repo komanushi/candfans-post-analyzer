@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third-party
     'django_extensions',
+    'django_rq',
     # own modules
     'modules.analyzer',
 ]
@@ -88,6 +89,16 @@ DATABASES = {
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['POSTGRES_HOSTNAME'],
     }
+}
+
+
+RQ_QUEUES = {
+    "default": {
+        "HOST": os.environ['REDIS_HOSTNAME'],
+        "PORT": os.environ['REDIS_PORT'],
+        "DB": os.environ['REDIS_DB'],
+        "DEFAULT_TIMEOUT": 360,
+    },
 }
 
 

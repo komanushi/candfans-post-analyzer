@@ -10,7 +10,8 @@ services:
     volumes:
       - ./docker/app/.bashrc:/root/.bashrc:ro
       - .:/app:cached
-    environment:
+      - local_django:/app/local/django:cached
+    environment: &django_environment
       DJANGO_ENV: local
       POSTGRES_DATABASE: candfans
       POSTGRES_USER: root
@@ -18,13 +19,41 @@ services:
       POSTGRES_HOSTNAME: db
       POSTGRES_PORT: 5432
       SECRET_KEY: $SECRET_KEY
+      REDIS_HOSTNAME: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
     ports:
       - "8001:8000"
     links:
       - db
+      - redis
+
+  rq:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    entrypoint: '/app/docker/app/entrypoint.dev.sh'
+    command: poetry run python ./manage.py rqworker default
+    working_dir: /app
+    volumes:
+      - ./docker/app/.bashrc:/root/.bashrc:ro
+      - .:/app:cached
+      - local_django:/app/local/django:cached
+    environment:
+      <<: *django_environment
+    links:
+      - db
+      - redis
+
   db:
     image: postgres:14.11-bullseye
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=docker
       - POSTGRES_DB=candfans
+
+  redis:
+    image: redis:7.2.4-alpine
+
+volumes:
+  local_django:
