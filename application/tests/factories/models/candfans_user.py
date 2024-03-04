@@ -1,8 +1,12 @@
 import factory
+from django.utils import timezone
+
 from modules.analyzer.models import CandfansUser
 
+from .base import AsyncMixin
 
-class CandfansUserFactory(factory.django.DjangoModelFactory):
+
+class CandfansUserFactory(AsyncMixin, factory.django.DjangoModelFactory):
 
     class Meta:
         model = CandfansUser
@@ -12,9 +16,5 @@ class CandfansUserFactory(factory.django.DjangoModelFactory):
     user_name = factory.Sequence(lambda n: f'user_name_{n}')
     last_synced_at = None
 
-    @classmethod
-    def _create(cls, model_class, *args, **kwargs):
-        async def create_coro(*args, **kwargs):
-            return await model_class.objects.acreate(*args, **kwargs)
-
-        return create_coro(*args, **kwargs)
+    updated_at = timezone.now()
+    created_at = timezone.now()

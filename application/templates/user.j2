@@ -12,8 +12,16 @@
   <li>{{ candfans_user.user_name }}</li>
   <li>{{ candfans_user.last_synced_at }}</li>
 </ul>
+<form method="POST" action="{% url 'candfans_user_refresh' user_code %}">
+  {% csrf_token %}
+  <button type="submit">更新</button>
+</form>
 {% else %}
-  このユーザ({{ user_code }})は存在しません。
+  このユーザ({{ user_code }})は存在しません。作成しますか？
+  <form method="POST" action="{% url 'candfans_user_refresh' user_code %}">
+  {% csrf_token %}
+  <button type="submit">作成</button>
+  </form>
 {% endif %}
 </body>
 </html>

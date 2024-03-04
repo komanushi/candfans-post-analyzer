@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from modules.analyzer import service as analyzer_sv
 from modules.analyzer.domain_models import CandfansUserModel
-from tests.factories.candfans_user import CandfansUserFactory
+from tests.factories.models.candfans_user import CandfansUserFactory
 
 
 class AnalyzerServiceTest(TestCase):
@@ -22,4 +22,11 @@ class AnalyzerServiceTest(TestCase):
         user_model = await analyzer_sv.get_candfans_user_by_user_code(user_code=user.user_code)
         self.assertEqual(user_model.user_id, user.user_id)
         self.assertEqual(user_model.user_code, user.user_code)
-        self.assertEqual(user_model.user_name, user.user_name)
+        self.assertEqual(user_model.username, user.username)
+
+    async def test_get_candfans_user_by_user_id(self):
+        user = await CandfansUserFactory.create()
+        user_model = await analyzer_sv.get_candfans_user_by_user_id(user_id=user.user_id)
+        self.assertEqual(user_model.user_id, user.user_id)
+        self.assertEqual(user_model.user_code, user.user_code)
+        self.assertEqual(user_model.username, user.username)
