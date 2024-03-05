@@ -1,13 +1,30 @@
 from typing import Optional
 
-from .domain_models import CandfansUserModel
-from .models import CandfansUser
+from .domain_models import CandfansUserModel, CandfansUserDetailModel
+from .models import CandfansUser, CandfansUserDetail
 from . import converter
 
 
-async def create_candfans_user(candfans_user: CandfansUserModel) -> CandfansUserModel:
-    created_user = await CandfansUser.create(**candfans_user.model_dump())
+async def create_candfans_user(
+        candfans_user: CandfansUserModel,
+        candfans_detail: Optional[CandfansUserDetailModel] = None
+) -> CandfansUserModel:
+    param = candfans_user.model_dump(exclude={'detail'})
+    if candfans_detail and candfans_detail.id is not None:
+        param['detail_id'] = candfans_detail.id
+
+    # detailインスタンス再取得
+    created_user = await CandfansUser.create(**param)
+    created_user = await CandfansUser.get_by_user_id(created_user.user_id)
     return converter.convert_to_candfans_user_model(created_user)
+
+
+async def create_candfans_user_detail(candfans_user_detail: CandfansUserDetailModel) -> CandfansUserDetailModel:
+    dumped = candfans_user_detail.model_dump()
+    dumped['user_id'] = dumped['id']
+    del dumped['id']
+    created_detail = await CandfansUserDetail.create(**candfans_user_detail.model_dump())
+    return converter.convert_to_candfans_user_detail_model(created_detail)
 
 
 async def get_candfans_user_by_user_code(user_code: str) -> Optional[CandfansUserModel]:

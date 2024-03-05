@@ -1,15 +1,14 @@
 import factory
 from django.utils import timezone
 
-from modules.analyzer.models import CandfansUserDetail
-
-from .base import AsyncMixin
+from modules.analyzer.domain_models import CandfansUserDetailModel
 
 
-class CandfansUserDetailFactory(AsyncMixin, factory.django.DjangoModelFactory):
+class CandfansUserDetailModelFactory(factory.Factory):
     class Meta:
-        model = CandfansUserDetail
+        model = CandfansUserDetailModel
 
+    id = factory.Sequence(lambda n: n)
     user_id = factory.Sequence(lambda n: n)
     user_code = factory.Sequence(lambda n: f"user{n}")
     username = factory.Faker('user_name')

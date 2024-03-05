@@ -19,19 +19,30 @@ class CandfansUser(models.Model):
             user_id: int,
             user_code: str,
             username: str,
-            last_synced_at: Optional[datetime.datetime],
+            last_synced_at: Optional[datetime.datetime] = None,
+            detail_id: Optional[int] = None
     ) -> 'CandfansUser':
         return await cls.objects.acreate(
             user_id=user_id,
             user_code=user_code,
             username=username,
-            last_synced_at=last_synced_at
+            last_synced_at=last_synced_at,
+            detail_id=detail_id,
         )
 
     @classmethod
     async def get_by_user_code(cls, user_code: str) -> Optional['CandfansUser']:
-        return await cls.objects.filter(user_code=user_code).order_by('-updated_at').afirst()
+        return await (
+            cls.objects
+            .filter(user_code=user_code)
+            .select_related('detail')
+            .order_by('-updated_at').afirst()
+        )
 
     @classmethod
     async def get_by_user_id(cls, user_id: int) -> Optional['CandfansUser']:
-        return await cls.objects.filter(user_id=user_id).afirst()
+        return await (
+            cls.objects
+            .filter(user_id=user_id)
+            .select_related('detail').afirst()
+        )

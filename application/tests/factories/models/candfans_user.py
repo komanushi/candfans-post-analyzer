@@ -13,7 +13,7 @@ class CandfansUserFactory(AsyncMixin, factory.django.DjangoModelFactory):
 
     user_id = factory.Sequence(lambda n: n + 1)
     user_code = factory.Sequence(lambda n: f'user_{n}')
-    user_name = factory.Sequence(lambda n: f'user_name_{n}')
+    username = factory.Sequence(lambda n: f'user_name_{n}')
     last_synced_at = None
 
     updated_at = timezone.now()

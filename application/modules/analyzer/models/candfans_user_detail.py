@@ -37,10 +37,11 @@ class CandfansUserDetail(models.Model):
     delete_at = models.CharField(max_length=255, null=True)
     is_accept_comment = models.BooleanField(default=False)
     is_official_creator = models.BooleanField(default=False)
+    is_on_air = models.BooleanField(default=False)
     live_url = models.CharField(max_length=255)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     @classmethod
     async def create(cls, **params) -> 'CandfansUserDetail':
-        return cls.objects.acreate(**params)
+        return await cls.objects.acreate(**params)
