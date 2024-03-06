@@ -1,6 +1,8 @@
 from typing import Optional
 
-from .domain_models import CandfansUserModel, CandfansUserDetailModel
+from django.utils import timezone
+
+from .domain_models import CandfansUserModel, CandfansUserDetailModel, SyncStatus
 from .models import CandfansUser, CandfansUserDetail
 from . import converter
 
@@ -25,6 +27,24 @@ async def create_candfans_user_detail(candfans_user_detail: CandfansUserDetailMo
     del dumped['id']
     created_detail = await CandfansUserDetail.create(**candfans_user_detail.model_dump())
     return converter.convert_to_candfans_user_detail_model(created_detail)
+
+
+async def update_user_code(candfans_user: CandfansUserModel):
+    await CandfansUser.update(
+        user_id=candfans_user.user_id,
+        params={
+            'user_code': candfans_user.user_code,
+        }
+    )
+
+
+async def set_sync_status(candfans_user: CandfansUserModel, status: SyncStatus) -> CandfansUserModel:
+    user = await CandfansUser.get_by_user_id(candfans_user.user_id)
+    user.sync_status = status.value
+    if status is SyncStatus.FINISHED:
+        user.last_synced_at = timezone.now()
+    await user.asave()
+    return converter.convert_to_candfans_user_model(user)
 
 
 async def get_candfans_user_by_user_code(user_code: str) -> Optional[CandfansUserModel]:

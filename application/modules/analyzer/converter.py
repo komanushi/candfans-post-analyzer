@@ -1,5 +1,5 @@
 from .models import CandfansUser, CandfansUserDetail
-from .domain_models import CandfansUserModel, CandfansUserDetailModel
+from .domain_models import CandfansUserModel, CandfansUserDetailModel, SyncStatus
 
 
 def convert_to_candfans_user_model(user: CandfansUser) -> CandfansUserModel:
@@ -7,6 +7,7 @@ def convert_to_candfans_user_model(user: CandfansUser) -> CandfansUserModel:
         user_id=user.user_id,
         user_code=user.user_code,
         username=user.username,
+        sync_status=SyncStatus(user.sync_status) if user.sync_status else None,
         last_synced_at=user.last_synced_at,
         detail=convert_to_candfans_user_detail_model(user.detail) if user.detail else None
     )

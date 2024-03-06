@@ -26,7 +26,13 @@ class CandfansUserViewTest(TestCase):
 class CandfansRefreshViewTest(TestCase):
     @patch('django_rq.enqueue')
     @patch('usecase.users.create_new_candfans_user')
-    async def test_ok_first(self, mock_create_new_candfans_user, mocked_enqueue):
+    @patch('modules.analyzer.service.set_sync_status')
+    async def test_ok_first(
+        self,
+        mock_set_sync_status,
+        mock_create_new_candfans_user,
+        mocked_enqueue
+    ):
         user_code = 'new'
         mock_create_new_candfans_user.return_value = CandFansUserModelFactory(
             user_code=user_code
@@ -35,6 +41,7 @@ class CandfansRefreshViewTest(TestCase):
         response = await client.post(f'/user/{user_code}/refresh')
         self.assertEqual(response.status_code, 302)
         self.assertTrue(mock_create_new_candfans_user.called)
+        self.assertTrue(mock_set_sync_status.called)
         mocked_enqueue.assert_called_once_with(
             users_usecase.sync_user_stats,
             ANY

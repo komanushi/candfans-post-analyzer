@@ -1,4 +1,5 @@
 import datetime
+import enum
 from typing import Optional
 
 from candfans_client.models.user import QueriedUser
@@ -7,6 +8,16 @@ from pydantic import BaseModel, conint
 
 
 EXPIRED_DAYS = 2
+
+
+class SyncStatus(enum.Enum):
+    SYNCING = "SYNCING"
+    FINISHED = "FINISHED"
+    ERROR = "ERROR"
+
+    @classmethod
+    def choices(cls):
+        return [(c.value, c.name) for c in cls]
 
 
 class CandfansUserDetailModel(BaseModel):
@@ -47,21 +58,37 @@ class CandfansUserDetailModel(BaseModel):
     is_official_creator: bool
     is_on_air: bool
     live_url: str
-    created_at: Optional[datetime.datetime]
+    created_at: Optional[datetime.datetime] = None
+
+    @classmethod
+    def from_candfans_user_info(cls, param: QueriedUser) -> 'CandfansUserDetailModel':
+        param_dict = param.model_dump()
+        param_dict['user_id'] = param_dict['id']
+        del param_dict['id']
+        return cls(**param_dict)
 
 
 class CandfansUserModel(BaseModel):
     user_id: int
     user_code: str
     username: str
+    sync_status: Optional[SyncStatus] = None
     last_synced_at: Optional[datetime.datetime] = None
     detail: Optional[CandfansUserDetailModel] = None
 
     @property
-    def is_expired(self) -> bool:
+    def is_expire(self) -> bool:
         if self.last_synced_at is None:
             return True
         if (timezone.now() - self.last_synced_at) > datetime.timedelta(days=EXPIRED_DAYS):
+            return True
+        return False
+
+    @property
+    def is_necessary_to_refresh(self) -> bool:
+        if self.sync_status is None:
+            return True
+        if self.is_expire:
             return True
         return False
 
@@ -71,6 +98,7 @@ class CandfansUserModel(BaseModel):
             user_id=param.id,
             user_code=param.user_code,
             username=param.username,
+            sync_status=None,
             last_synced_at=None,
             detail=None,
         )
