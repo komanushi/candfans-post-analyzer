@@ -36,7 +36,7 @@ class CandfansUser(models.Model):
 
     @classmethod
     async def update(cls, user_id: int, params: dict):
-        return await cls.objects.filter(user_id=user_id).update(**params)
+        return await cls.objects.filter(user_id=user_id).aupdate(**params)
 
     @classmethod
     async def get_by_user_code(cls, user_code: str) -> Optional['CandfansUser']:

@@ -16,6 +16,7 @@ class CandfansUserFactory(AsyncMixin, factory.django.DjangoModelFactory):
     username = factory.Sequence(lambda n: f'user_name_{n}')
     sync_status = None
     last_synced_at = None
+    detail = None
 
     updated_at = timezone.now()
     created_at = timezone.now()
