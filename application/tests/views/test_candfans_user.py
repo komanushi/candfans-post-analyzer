@@ -2,7 +2,7 @@ from unittest.mock import patch, ANY
 from django.test import TestCase, AsyncClient
 
 from tests.factories.models.candfans_user import CandfansUserFactory
-from tests.factories.domain_models.candfans_user import CandFansUserModelFactory
+from tests.factories.domain_models.analyzer.candfans_user import CandFansUserModelFactory
 from usecase import users as users_usecase
 
 

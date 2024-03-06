@@ -1,9 +1,9 @@
 from django.test import TestCase
 
 from modules.analyzer import service as analyzer_sv
-from modules.analyzer.domain_models import CandfansUserModel, CandfansUserDetailModel
+from modules.analyzer.domain_models import CandfansUserModel
 from tests.factories.models.candfans_user import CandfansUserFactory
-from tests.factories.domain_models.candfans_user_detail import CandfansUserDetailModelFactory
+from tests.factories.domain_models.analyzer.candfans_user_detail import CandfansUserDetailModelFactory
 
 
 class AnalyzerServiceTest(TestCase):

@@ -34,8 +34,11 @@ async def create_new_candfans_user(user_code: str) -> CandfansUserModel:
 
 
 async def sync_user_stats(user_id: int):
+    print(f'start sync_user_stats for {user_id=}')
     candfans_user = await analyzer_sv.get_candfans_user_by_user_id(user_id)
-    print(candfans_user)
-    # TODO get timeline
-    # TODO save timeline
+    timeline_map = await cg_sv.get_timelines(user_id=user_id)
+    print(timeline_map)
+
+
     await analyzer_sv.set_sync_status(candfans_user, status=SyncStatus.FINISHED)
+    print(f'end sync_user_stats for {user_id=}')
