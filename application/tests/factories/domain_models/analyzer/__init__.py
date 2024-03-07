@@ -1,0 +1,3 @@
+from .candfans_plan import CandfansPlanModelFactory
+from .candfans_user import CandFansUserModelFactory
+from .candfans_user_detail import CandfansUserDetailModelFactory

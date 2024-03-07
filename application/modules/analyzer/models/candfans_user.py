@@ -10,6 +10,7 @@ class CandfansUser(models.Model):
     user_code = models.CharField(max_length=255)
     username = models.TextField()
     sync_status = models.CharField(max_length=100, choices=SyncStatus.choices(), null=True)
+    sync_requested_at = models.DateTimeField(null=True, default=None)
     last_synced_at = models.DateTimeField(null=True, default=None)
     detail = models.OneToOneField('CandfansUserDetail', on_delete=models.SET_NULL, null=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -22,6 +23,7 @@ class CandfansUser(models.Model):
             user_code: str,
             username: str,
             sync_status: Optional[SyncStatus] = None,
+            sync_requested_at: Optional[datetime.datetime] = None,
             last_synced_at: Optional[datetime.datetime] = None,
             detail_id: Optional[int] = None
     ) -> 'CandfansUser':
@@ -30,6 +32,7 @@ class CandfansUser(models.Model):
             user_code=user_code,
             username=username,
             sync_status=sync_status.value if sync_status else None,
+            sync_requested_at=sync_requested_at,
             last_synced_at=last_synced_at,
             detail_id=detail_id,
         )

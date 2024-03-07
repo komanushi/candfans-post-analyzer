@@ -75,4 +75,6 @@ class UserUseCaseTest(TestCase):
             user_code=detail.user_code,
             detail=detail
         )
+
+
         await users_use_case.sync_user_stats(user.user_id)

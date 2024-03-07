@@ -2,9 +2,9 @@ from typing import Optional
 
 from django.utils import timezone
 
-from .domain_models import CandfansUserModel, CandfansUserDetailModel, SyncStatus
-from .models import CandfansUser, CandfansUserDetail
-from . import converter
+from ..domain_models import CandfansUserModel, CandfansUserDetailModel, SyncStatus
+from ..models import CandfansUser, CandfansUserDetail
+from .. import converter
 
 
 async def create_candfans_user(
@@ -51,6 +51,8 @@ async def set_sync_status(candfans_user: CandfansUserModel, status: SyncStatus) 
     user.sync_status = status.value
     if status is SyncStatus.FINISHED:
         user.last_synced_at = timezone.now()
+    elif status is SyncStatus.SYNCING:
+        user.sync_requested_at = timezone.now()
     await user.asave()
     return converter.convert_to_candfans_user_model(user)
 

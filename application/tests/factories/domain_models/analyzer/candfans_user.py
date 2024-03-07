@@ -11,3 +11,4 @@ class CandFansUserModelFactory(factory.Factory):
     username = factory.Faker('user_name')
     sync_status = None
     last_synced_at = None
+    sync_requested_at = None

@@ -10,6 +10,7 @@ from modules.candfans_gateway import service as cg_sv
 async def create_new_candfans_user(user_code: str) -> CandfansUserModel:
     user_info = await cg_sv.get_candfans_user_info_by_user_code(user_code)
     user = user_info.user
+    plans = user_info.plans
 
     new_detail = await analyzer_sv.create_candfans_user_detail(
         CandfansUserDetailModel.from_candfans_user_info(user)
@@ -26,7 +27,7 @@ async def create_new_candfans_user(user_code: str) -> CandfansUserModel:
         )
     else:
         user_model = await analyzer_sv.create_candfans_user(
-            CandfansUserModel.from_candfans_user_info(user),
+            CandfansUserModel.from_candfans_user_info_api(user),
             candfans_detail=new_detail,
         )
 
@@ -38,6 +39,7 @@ async def sync_user_stats(user_id: int):
     candfans_user = await analyzer_sv.get_candfans_user_by_user_id(user_id)
     timeline_map = await cg_sv.get_timelines(user_id=user_id)
     print(timeline_map)
+
 
 
     await analyzer_sv.set_sync_status(candfans_user, status=SyncStatus.FINISHED)
