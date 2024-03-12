@@ -15,7 +15,7 @@ class CandfansClientPlanFactory(factory.Factory):
     plan_detail = factory.Faker('text')
     r18 = factory.Sequence(lambda n: n)
     status = factory.Sequence(lambda n: n)
-    fans_cnt = None
+    fans_cnt = 10
     is_fans = factory.Faker('boolean')
     is_price_update = None
     change_support_price = None

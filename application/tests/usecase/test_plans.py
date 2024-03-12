@@ -1,6 +1,7 @@
 from unittest.mock import patch
 from django.test import TestCase
 
+from modules.analyzer.models import CandfansPlanFansHistory, CandfansPlan
 from usecase import plans as plans_use_case
 from tests.factories.models import CandfansUserFactory
 from tests.factories.external.candfans_client_user_info import (
@@ -32,4 +33,5 @@ class PlansUseCaseTest(TestCase):
         mocked_get_candfans_user_info_by_user_code.return_value = user_info
         new_plans = await plans_use_case.resync_candfans_plan(user_code)
         self.assertEqual(len(new_plans), 1)
-
+        self.assertEqual(await CandfansPlan.objects.acount(), 1)
+        self.assertEqual(await CandfansPlanFansHistory.objects.acount(), 1)
