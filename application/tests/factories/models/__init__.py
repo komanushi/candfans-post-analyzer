@@ -1,2 +1,3 @@
 from .candfans_user_detail import CandfansUserDetailFactory
 from .candfans_user import CandfansUserFactory
+from .candfans_plan import CandfansPlanFactory

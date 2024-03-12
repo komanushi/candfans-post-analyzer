@@ -7,7 +7,10 @@ from .candfans_user import (
     get_candfans_user_by_user_id,
     get_candfans_user_by_user_code
 )
-from .candfans_plan import create_candfans_plan
+from .candfans_plan import (
+    create_candfans_plan,
+    sync_candfans_plan,
+)
 
 __all__ = [
     # user
@@ -19,5 +22,6 @@ __all__ = [
     'get_candfans_user_by_user_id',
     'get_candfans_user_by_user_code',
     # plan
-    'create_candfans_plan'
+    'create_candfans_plan',
+    'sync_candfans_plan',
 ]

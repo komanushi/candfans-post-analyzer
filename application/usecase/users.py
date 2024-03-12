@@ -2,12 +2,13 @@ from modules.analyzer import service as analyzer_sv
 from modules.analyzer.domain_models import (
     CandfansUserModel,
     CandfansUserDetailModel,
+    CandfansPlanModel,
     SyncStatus
 )
 from modules.candfans_gateway import service as cg_sv
 
 
-async def create_new_candfans_user(user_code: str) -> CandfansUserModel:
+async def create_new_candfans_user(user_code: str) -> tuple[CandfansUserModel, list[CandfansPlanModel]]:
     user_info = await cg_sv.get_candfans_user_info_by_user_code(user_code)
     user = user_info.user
     plans = user_info.plans
@@ -31,7 +32,15 @@ async def create_new_candfans_user(user_code: str) -> CandfansUserModel:
             candfans_detail=new_detail,
         )
 
-    return user_model
+    created_plans = []
+    for plan in plans:
+        created_plan = await analyzer_sv.create_candfans_plan(CandfansPlanModel.from_candfans_plan_api(
+            param=plan,
+            user=user_model
+        ))
+        created_plans.append(created_plan)
+
+    return user_model, created_plans
 
 
 async def sync_user_stats(user_id: int):
@@ -40,7 +49,7 @@ async def sync_user_stats(user_id: int):
     timeline_map = await cg_sv.get_timelines(user_id=user_id)
     print(timeline_map)
 
-
+    # TODO postの同期
 
     await analyzer_sv.set_sync_status(candfans_user, status=SyncStatus.FINISHED)
     print(f'end sync_user_stats for {user_id=}')

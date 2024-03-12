@@ -96,9 +96,7 @@ class AnalyzerServiceTest(TestCase):
         self.assertEqual(created_plan.total_support_price, plan_model.total_support_price)
         self.assertEqual(created_plan.plan_name, plan_model.plan_name)
         self.assertEqual(created_plan.plan_detail, plan_model.plan_detail)
-        self.assertEqual(created_plan.backnumber_id, plan_model.backnumber_id)
         self.assertEqual(created_plan.backnumber_price, plan_model.backnumber_price)
-        self.assertEqual(created_plan.total_backnumber_price, plan_model.total_backnumber_price)
         self.assertEqual(created_plan.can_see_backnumber_plan_pay, plan_model.can_see_backnumber_plan_pay)
         self.assertEqual(created_plan.can_buy_backnumber_not_entry_plan, plan_model.can_buy_backnumber_not_entry_plan)
-        self.assertEqual(created_plan.add_backnumber_date, plan_model.add_backnumber_date)
+

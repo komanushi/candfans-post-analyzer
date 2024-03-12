@@ -5,8 +5,10 @@ from django.views import View
 
 from modules.analyzer import service as analyzer_sv
 from modules.analyzer.domain_models import SyncStatus
-from modules.candfans_gateway import service as cg_sv
-from usecase import users as users_usecase
+from usecase import (
+    users as users_usecase,
+    plans as plans_usecase,
+)
 
 
 class CandfansRequestView(View):
@@ -28,9 +30,15 @@ class CandfansRequestView(View):
 class CandfansRefreshView(View):
     async def post(self, request, user_code: str, *args, **kwargs):
         candfans_user = await analyzer_sv.get_candfans_user_by_user_code(user_code)
+        is_new_user = False
         if not candfans_user:
-            candfans_user = await users_usecase.create_new_candfans_user(user_code)
+            is_new_user = True
+            candfans_user, candfans_plans = await users_usecase.create_new_candfans_user(user_code)
+
         if candfans_user.is_necessary_to_refresh:
+            if not is_new_user:
+                await plans_usecase.resync_candfans_plan(user_code)
+
             await analyzer_sv.set_sync_status(candfans_user, status=SyncStatus.SYNCING)
             django_rq.enqueue(users_usecase.sync_user_stats, candfans_user.user_id)
 

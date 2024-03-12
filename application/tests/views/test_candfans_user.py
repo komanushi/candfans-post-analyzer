@@ -2,7 +2,7 @@ from unittest.mock import patch, ANY
 from django.test import TestCase, AsyncClient
 
 from tests.factories.models.candfans_user import CandfansUserFactory
-from tests.factories.domain_models.analyzer.candfans_user import CandFansUserModelFactory
+from tests.factories.domain_models.analyzer import CandFansUserModelFactory, CandfansPlanModelFactory
 from usecase import users as users_usecase
 
 
@@ -34,8 +34,12 @@ class CandfansRefreshViewTest(TestCase):
         mocked_enqueue
     ):
         user_code = 'new'
-        mock_create_new_candfans_user.return_value = CandFansUserModelFactory(
+        user = CandFansUserModelFactory(
             user_code=user_code
+        )
+        mock_create_new_candfans_user.return_value = (
+            user,
+            [CandfansPlanModelFactory.create(user=user)]
         )
         client = AsyncClient()
         response = await client.post(f'/user/{user_code}/refresh')

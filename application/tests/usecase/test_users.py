@@ -24,10 +24,11 @@ class UserUseCaseTest(TestCase):
             )
         )
         mocked_get_candfans_user_info_by_user_code.return_value = user_info
-        user_model = await users_use_case.create_new_candfans_user(user_code)
+        user_model, plans = await users_use_case.create_new_candfans_user(user_code)
         self.assertEqual(user_model.user_id, user_info.user.id)
         self.assertEqual(user_model.user_code, user_code)
         self.assertIsNotNone(user_model.detail)
+        self.assertEqual(plans, [])
 
     @patch('modules.candfans_gateway.service.get_candfans_user_info_by_user_code')
     async def test_create_new_candfans_user_change_user_code(
@@ -53,7 +54,7 @@ class UserUseCaseTest(TestCase):
         )
 
         mocked_get_candfans_user_info_by_user_code.return_value = user_info
-        user_model = await users_use_case.create_new_candfans_user(new_user_code)
+        user_model, plans = await users_use_case.create_new_candfans_user(new_user_code)
         self.assertEqual(user_model.user_id, user_info.user.id)
         self.assertEqual(user_model.user_code, new_user_code)
         self.assertNotEqual(user_model.detail_id, before_detail.id)

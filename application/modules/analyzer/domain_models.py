@@ -117,30 +117,54 @@ class CandfansUserModel(BaseModel):
 class CandfansPlanModel(BaseModel):
     plan_id: int
     user: CandfansUserModel
+    thanks_message_template_id: Optional[int]
+    plan_name: str
     support_price: int
     total_support_price: int
-    plan_name: str
     plan_detail: str
-    backnumber_id: Optional[int]
+    r18: int
+    status: int
+    fans_cnt: Optional[int]
+    is_fans: bool
+    is_price_update: Optional[int]
+    change_support_price: Optional[int]
+    content_length: int
+    delete_at: Optional[datetime.datetime]
     backnumber_price: Optional[int]
-    total_backnumber_price: Optional[int]
+    limit_after_backnumber: int
+    this_month_after_backnumber: int
     can_see_backnumber_plan_pay: bool
     can_buy_backnumber_not_entry_plan: bool
-    add_backnumber_date: Optional[str]
+    done_transfar_backnumber: bool
+    done_transfar_limit_backnumber: bool
+    entry_disabled: bool
+    upper_limit_entry_cnt: Optional[int]
 
     @classmethod
     def from_candfans_plan_api(cls, param: Plan, user: CandfansUserModel):
         return cls(
             plan_id=param.plan_id,
             user=user,
+            thanks_message_template_id=param.thanks_message_template_id,
+            plan_name=param.plan_name,
             support_price=param.support_price,
             total_support_price=param.total_support_price,
-            plan_name=param.plan_name,
             plan_detail=param.plan_detail,
-            backnumber_id=param.backnumber_id,
+            r18=param.r18,
+            status=param.status,
+            fans_cnt=param.fans_cnt,
+            is_fans=param.is_fans,
+            is_price_update=param.is_price_update,
+            change_support_price=param.change_support_price,
+            content_length=param.content_length,
+            delete_at=param.delete_at,
             backnumber_price=param.backnumber_price,
-            total_backnumber_price=param.total_backnumber_price,
+            limit_after_backnumber=param.limit_after_backnumber,
+            this_month_after_backnumber=param.this_month_after_backnumber,
             can_see_backnumber_plan_pay=param.can_see_backnumber_plan_pay,
             can_buy_backnumber_not_entry_plan=param.can_buy_backnumber_not_entry_plan,
-            add_backnumber_date=param.add_backnumber_date,
+            done_transfar_backnumber=param.done_transfar_backnumber,
+            done_transfar_limit_backnumber=param.done_transfar_limit_backnumber,
+            entry_disabled=param.entry_disabled,
+            upper_limit_entry_cnt=param.upper_limit_entry_cnt,
         )
