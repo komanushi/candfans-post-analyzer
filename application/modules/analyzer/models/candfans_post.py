@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import Field
 
 
 class CandfansPost(models.Model):
@@ -39,10 +40,28 @@ class CandfansPost(models.Model):
     is_official_creator = models.BooleanField()
     has_own_thumbnail = models.BooleanField()
     is_on_air = models.BooleanField()
-
     live_url = models.CharField(max_length=500, blank=True, null=True)
-
-    plans = models.ManyToManyField('CandfansPlan', related_name='posts')
 
     def __str__(self):
         return f'{self.user_id=}, {self.post_id=}'
+
+    @classmethod
+    async def update_or_create(cls, post_id, **params) -> 'CandfansPost':
+        post, is_new = await cls.objects.aupdate_or_create(
+            post_id=post_id,
+            defaults=params,
+        )
+        return post
+
+    @classmethod
+    async def bulk_update_or_create(cls, posts: list['CandfansPost']) -> list['CandfansPost']:
+        field_names = [
+            f.name for f in cls._meta.get_fields()
+            if isinstance(f, Field) and f.name != 'post_id'
+        ]
+        return await cls.objects.abulk_create(
+            posts,
+            update_conflicts=True,
+            unique_fields=['post_id'],
+            update_fields=field_names,
+        )

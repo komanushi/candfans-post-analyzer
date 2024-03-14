@@ -11,6 +11,7 @@ from .candfans_plan import (
     create_candfans_plan,
     sync_candfans_plan,
 )
+from .candfans_post import update_or_create_candfans_post
 
 __all__ = [
     # user
@@ -24,4 +25,6 @@ __all__ = [
     # plan
     'create_candfans_plan',
     'sync_candfans_plan',
+    # post
+    'update_or_create_candfans_post',
 ]

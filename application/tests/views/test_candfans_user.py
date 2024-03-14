@@ -3,7 +3,7 @@ from django.test import TestCase, AsyncClient
 
 from tests.factories.models.candfans_user import CandfansUserFactory
 from tests.factories.domain_models.analyzer import CandFansUserModelFactory, CandfansPlanModelFactory
-from usecase import users as users_usecase
+from usecase import users_case
 
 
 class CandfansUserViewTest(TestCase):
@@ -25,7 +25,7 @@ class CandfansUserViewTest(TestCase):
 
 class CandfansRefreshViewTest(TestCase):
     @patch('django_rq.enqueue')
-    @patch('usecase.users.create_new_candfans_user')
+    @patch('usecase.users_case.create_new_candfans_user')
     @patch('modules.analyzer.service.set_sync_status')
     async def test_ok_first(
         self,
@@ -47,6 +47,6 @@ class CandfansRefreshViewTest(TestCase):
         self.assertTrue(mock_create_new_candfans_user.called)
         self.assertTrue(mock_set_sync_status.called)
         mocked_enqueue.assert_called_once_with(
-            users_usecase.sync_user_stats,
+            users_case.sync_user_stats,
             ANY
         )

@@ -32,6 +32,7 @@ async def get_timelines(user_id: int, max_months: int = 6) -> list[TimelinePosts
                 public_item=await _get_timeline(client, user_id, yyyy_mm, PostType.PUBLIC_ITEM),
                 limited_access_item=await _get_timeline(client, user_id, yyyy_mm, PostType.LIMITED_ACCESS_ITEM),
                 individual_access_item=await _get_timeline(client, user_id, yyyy_mm, PostType.INDIVIDUAL_ITEM),
+                back_number_item=await _get_timeline(client, user_id, yyyy_mm, PostType.BACK_NUMBER_ITEM),
             )
         ))
     return timelines

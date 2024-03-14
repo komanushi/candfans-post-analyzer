@@ -81,13 +81,13 @@ files = [
 
 [[package]]
 name = "candfans-client"
-version = "3.0.0"
+version = "3.1.0"
 description = ""
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "candfans_client-3.0.0-py3-none-any.whl", hash = "sha256:9e34a21a120837eaf6d3f5fb252b4fc7a76c7ffff663b32945b969700285bf60"},
-    {file = "candfans_client-3.0.0.tar.gz", hash = "sha256:838c54416865aa94f75b05f407ec92c438fdb206267677a184fa0b8bf098228d"},
+    {file = "candfans_client-3.1.0-py3-none-any.whl", hash = "sha256:fed1b4e9141dff4b767df4ee1a027b4163fcdd95f1a51ca4035afccfac5473d8"},
+    {file = "candfans_client-3.1.0.tar.gz", hash = "sha256:9e229228ce680552a3e103c2b4aec4e9ff6550cd9880729967946023d5c948b0"},
 ]
 
 [package.dependencies]

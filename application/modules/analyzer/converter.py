@@ -1,4 +1,11 @@
-from .models import CandfansUser, CandfansUserDetail, CandfansPlan
+from candfans_client.models.timeline import Post
+
+from .models import (
+    CandfansUser,
+    CandfansUserDetail,
+    CandfansPlan,
+    CandfansPost,
+)
 from .domain_models import (
     CandfansUserModel,
     CandfansUserDetailModel,
@@ -88,4 +95,47 @@ def convert_to_candfans_plan_model(plan: CandfansPlan) -> CandfansPlanModel:
         done_transfar_limit_backnumber=plan.done_transfar_limit_backnumber,
         entry_disabled=plan.entry_disabled,
         upper_limit_entry_cnt=plan.upper_limit_entry_cnt,
+    )
+
+
+def convert_from_post_to_candfans_post(post: Post) -> CandfansPost:
+    return CandfansPost(
+        month=post.month,
+        post_id=post.post_id,
+        user_id=post.user_id,
+        user_code=post.user_code,
+        username=post.username,
+        profile_img=post.profile_img,
+        profile_cover_img=post.profile_cover_img,
+        post_date=post.post_date,
+        contents_type=post.contents_type,
+        post_type=post.post_type,
+        contents_text=post.contents_text,
+        over_contents_50str=post.over_contents_50str,
+        price=post.price,
+        limit_post_date=post.limit_post_date,
+        reserve_post_date=post.reserve_post_date,
+        contents_path1=post.contents_path1,
+        contents_path2=post.contents_path2,
+        contents_path3=post.contents_path3,
+        contents_path4=post.contents_path4,
+        image_count=post.image_count,
+        movie_time=post.movie_time,
+        secret_file=post.secret_file,
+        thumbnail_file=post.thumbnail_file,
+        like_cnt=post.like_cnt,
+        comments_cnt=post.comments_cnt,
+        chip_cnt=post.chip_cnt,
+        is_like=post.is_like,
+        can_browsing=post.can_browsing,
+        can_send_chip=post.can_send_chip,
+        r18=post.r18,
+        apply_status=post.apply_status,
+        is_progressed=post.is_progressed,
+        is_accept_comment=post.is_accept_comment,
+        can_read_text=post.can_read_text,
+        is_official_creator=post.is_official_creator,
+        has_own_thumbnail=post.has_own_thumbnail,
+        is_on_air=post.is_on_air,
+        live_url=post.live_url,
     )

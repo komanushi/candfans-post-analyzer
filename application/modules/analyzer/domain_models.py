@@ -21,9 +21,6 @@ class SyncStatus(enum.Enum):
         return [(c.value, c.name) for c in cls]
 
 
-
-
-
 class CandfansUserDetailModel(BaseModel):
     id: Optional[int] = None
     user_id: int

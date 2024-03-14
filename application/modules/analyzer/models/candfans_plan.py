@@ -54,6 +54,13 @@ class CandfansPlan(models.Model):
         )
 
     @classmethod
+    async def get_list_by_plan_ids(cls, plan_ids: list[int]) -> list['CandfansPlan']:
+        plans = []
+        async for plan in cls.objects.filter(plan_id__in=plan_ids):
+            plans.append(plan)
+        return plans
+
+    @classmethod
     async def delete_by_user_id_and_exclude_plan_ids(cls, user_id: int, exclude_plan_ids: list[int]):
         return await (
             cls.objects.exclude(plan_id__in=exclude_plan_ids).filter(user_id=user_id).adelete()

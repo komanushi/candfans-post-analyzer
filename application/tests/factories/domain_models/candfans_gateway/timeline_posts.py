@@ -1,6 +1,6 @@
 import factory
 from faker import Faker
-from candfans_client.models.timeline import ShortPlan
+from candfans_client.models.timeline import ShortPlan, PostType
 from modules.candfans_gateway.domain_models import (
     TimelinePosts,
     PostMap,
@@ -37,8 +37,8 @@ class PostFactory(factory.Factory):
     profile_img = factory.Faker('image_url')
     profile_cover_img = factory.Faker('image_url')
     post_date = Faker().date_time().strftime("%Y-%m-%d %H:%M:%S")
-    contents_type = factory.Sequence(lambda n: n)
-    post_type = factory.Sequence(lambda n: n)
+    contents_type = 1
+    post_type = PostType.LIMITED_ACCESS_ITEM.value
     contents_text = factory.Faker('text')
     over_contents_50str = factory.Sequence(lambda n: n)
     price = factory.Sequence(lambda n: n)
@@ -67,7 +67,7 @@ class PostFactory(factory.Factory):
     has_own_thumbnail = factory.Faker('boolean')
     is_on_air = factory.Faker('boolean')
     live_url = factory.Faker('url')
-    plans = factory.List([factory.SubFactory(ShortPlanFactory) for _ in range(1)])
+    plans = []
 
 
 class PostMapFactory(factory.Factory):
@@ -77,6 +77,7 @@ class PostMapFactory(factory.Factory):
     public_item = factory.List([factory.SubFactory(PostFactory) for _ in range(1)])
     limited_access_item = factory.List([factory.SubFactory(PostFactory) for _ in range(2)])
     individual_access_item = factory.List([factory.SubFactory(PostFactory) for _ in range(3)])
+    back_number_item = factory.List([factory.SubFactory(PostFactory) for _ in range(2)])
 
 
 class TimelinePostsModelFactory(factory.Factory):

@@ -47,9 +47,10 @@ async def sync_user_stats(user_id: int):
     print(f'start sync_user_stats for {user_id=}')
     candfans_user = await analyzer_sv.get_candfans_user_by_user_id(user_id)
     timeline_map = await cg_sv.get_timelines(user_id=user_id)
-    print(timeline_map)
+    target_posts = []
+    for t_post in timeline_map:
+        target_posts.extend(t_post.post_map.all_posts)
 
-    # TODO postの同期
-
+    new_post_count = await analyzer_sv.update_or_create_candfans_post(target_posts)
     await analyzer_sv.set_sync_status(candfans_user, status=SyncStatus.FINISHED)
-    print(f'end sync_user_stats for {user_id=}')
+    print(f'end sync_user_stats for {user_id=}, {new_post_count=}')
