@@ -20,6 +20,7 @@ hiredis = "^2.3.2"
 django-rq = "^2.10.1"
 watchdog = "^4.0.0"
 freezegun = "^1.4.0"
+pgcli = "^4.0.1"
 
 
 [build-system]
