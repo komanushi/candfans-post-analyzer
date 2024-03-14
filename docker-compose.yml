@@ -13,6 +13,7 @@ services:
       - local_django:/app/local/django:cached
     environment: &django_environment
       DJANGO_ENV: local
+      PYTHONUNBUFFERED: 1
       POSTGRES_DATABASE: candfans
       POSTGRES_USER: root
       POSTGRES_PASSWORD: docker

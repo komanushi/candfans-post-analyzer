@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+	<link rel="stylesheet" type="text/css" href="https://rawgit.com/outboxcraft/beauter/master/beauter.min.css"/>
+
+  <title>CandfansAnalyzer</title>
+</head>
+<body>
+<div class="jumbo _info">
+  <h3>Welcome to Candfans Analyzer</h3>
+  <form action="{% url 'index' %}" method="POST">
+    {% csrf_token %}
+    <input type="text" name="user_code" placeholder="user_code" style="width: 200px">
+    <button type="submit" class="_primary">分析</button>
+  </form>
+</div>
+<div>
+</div>
+<script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
+</body>
+</html>

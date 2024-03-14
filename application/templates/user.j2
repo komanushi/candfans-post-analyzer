@@ -1,27 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+	<link rel="stylesheet" type="text/css" href="https://rawgit.com/outboxcraft/beauter/master/beauter.min.css"/>
+
+  <title>{{ candfans_user.user_code }}さんの情報</title>
+  <style>
+    .container {
+        padding: 10px;
+    }
+  </style>
 </head>
 <body>
-{% if candfans_user %}
-<ul>
-  <li>{{ candfans_user.user_id }}</li>
-  <li>{{ candfans_user.user_code }}</li>
-  <li>{{ candfans_user.username }}</li>
-  <li>{{ candfans_user.last_synced_at }}</li>
-</ul>
-<form method="POST" action="{% url 'candfans_user_refresh' user_code %}">
-  {% csrf_token %}
-  <button type="submit">更新</button>
-</form>
-{% else %}
-  このユーザ({{ user_code }})は存在しません。作成しますか？
+<div class="container _primary" style="height:50px">
+  <a
+    style='text-decoration: none; color:#FFF'
+    href="{% url 'index' %}"
+  >CandfansAnalyzer</a>
+</div>
+<div class="container" style="min-height:250px">
+  {% if candfans_user %}
+  <ul>
+    <li>{{ candfans_user.user_id }}</li>
+    <li>{{ candfans_user.user_code }}</li>
+    <li>{{ candfans_user.username }}</li>
+    <li>{{ candfans_user.last_synced_at }}</li>
+    <li>{{ candfans_user.sync_requested_at }}</li>
+
+  </ul>
   <form method="POST" action="{% url 'candfans_user_refresh' user_code %}">
-  {% csrf_token %}
-  <button type="submit">作成</button>
+    {% csrf_token %}
+    <button
+      type="submit"
+      {% if not candfans_user.is_necessary_to_refresh %}
+        disabled
+        class="_disabled"
+      {% endif %}
+    >更新</button>
   </form>
-{% endif %}
+  {% else %}
+    このユーザ({{ user_code }})は存在しません。作成しますか？
+    <form method="POST" action="{% url 'candfans_user_refresh' user_code %}">
+    {% csrf_token %}
+    <button type="submit">作成</button>
+    </form>
+  {% endif %}
+</div>
+<script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
 </body>
 </html>
