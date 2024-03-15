@@ -34,7 +34,9 @@ async def associate_user_detail(candfans_user: CandfansUserModel, candfans_user_
     assert candfans_user_detail.id is not None
     user.detail_id = candfans_user_detail.id
     await user.asave()
-    return await CandfansUser.get_by_user_id(user.user_id)
+    return converter.convert_to_candfans_user_model(
+        await CandfansUser.get_by_user_id(user.user_id)
+    )
 
 
 async def update_user_code(candfans_user: CandfansUserModel):

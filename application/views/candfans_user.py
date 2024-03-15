@@ -19,6 +19,16 @@ class CandfansRequestView(View):
             'user_code': user_code,
         }
         candfans_user = await analyzer_sv.get_candfans_user_by_user_code(user_code)
+        if not candfans_user:
+            try:
+                candfans_user, candfans_plans = await users_case.create_new_candfans_user(user_code)
+            except CandFansException as e:
+                message = str(e)
+                if 'アカウントが見つかりませんでした' in message:
+                    return redirect('candfans_user_not_found', user_code=user_code)
+                else:
+                    return redirect('candfans_user_request', user_code=user_code)
+
         if candfans_user:
             context['candfans_user'] = candfans_user
         return render(
@@ -36,7 +46,7 @@ class CandfansRefreshView(View):
             is_new_user = True
             try:
                 candfans_user, candfans_plans = await users_case.create_new_candfans_user(user_code)
-            except Exception as e:
+            except CandFansException as e:
                 message = str(e)
                 if 'アカウントが見つかりませんでした' in message:
                     return redirect('candfans_user_not_found', user_code=user_code)

@@ -16,6 +16,14 @@ class SyncStatus(enum.Enum):
     FINISHED = "FINISHED"
     ERROR = "ERROR"
 
+    @property
+    def label(self):
+        return {
+            self.SYNCING: '同期中',
+            self.FINISHED: '同期完了',
+            self.ERROR: '同期失敗',
+        }[self]
+
     @classmethod
     def choices(cls):
         return [(c.value, c.name) for c in cls]
@@ -88,6 +96,7 @@ class CandfansUserModel(BaseModel):
 
     @property
     def is_necessary_to_refresh(self) -> bool:
+        return True
         if self.sync_status is None:
             return True
         # 同期が1時間終わらないのはおかしい

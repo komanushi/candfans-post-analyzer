@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -14,39 +13,65 @@
   </style>
 </head>
 <body>
-<div class="container _primary" style="height:50px">
-  <a
-    style='text-decoration: none; color:#FFF'
-    href="{% url 'index' %}"
-  >CandfansAnalyzer</a>
-</div>
-<div class="container" style="min-height:250px">
-  {% if candfans_user %}
-  <ul>
-    <li>{{ candfans_user.user_id }}</li>
-    <li>{{ candfans_user.user_code }}</li>
-    <li>{{ candfans_user.username }}</li>
-    <li>{{ candfans_user.last_synced_at }}</li>
-    <li>{{ candfans_user.sync_requested_at }}</li>
 
-  </ul>
+<ul class="topnav _primary" id="topNav">
+  <li><a href="{% url 'index' %}" class="brand">CandfansAnalyzer</a></li>
+  <li class="-icon">
+    <a href="javascript:void(0);" onclick="topnav('topNav')">☰</a>
+  </li>
+</ul>
+
+<div class="container _alignCenter" style="height:250px">
+  <table class="_width100">
+    <tbody>
+      <tr>
+        <td>ユーザーID</td>
+        <td>{{ candfans_user.user_id }}</td>
+      </tr>
+      <tr>
+        <td>ユーザーコード</td>
+        <td>{{ candfans_user.user_code }}</td>
+      </tr>
+      <tr>
+        <td>ユーザーネーム</td>
+        <td>{{ candfans_user.username }}</td>
+      </tr>
+      <tr>
+        <td>同期状況</td>
+        {% if candfans_user.sync_status %}
+          <td>{{ candfans_user.sync_status.label }}</td>
+        {% else %}
+          <td>未同期</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <td>最終同期時刻</td>
+        <td>{{ candfans_user.last_synced_at }}</td>
+      </tr>
+      <tr>
+        <td>最終同期開始時刻</td>
+        <td>{{ candfans_user.sync_requested_at }}</td>
+      </tr>
+    </tbody>
+  </table>
   <form method="POST" action="{% url 'candfans_user_refresh' user_code %}">
     {% csrf_token %}
-    <button
-      type="submit"
-      {% if not candfans_user.is_necessary_to_refresh %}
-        disabled
-        class="_disabled"
-      {% endif %}
-    >更新</button>
+      <button
+        type="submit"
+        {% if not candfans_user.is_necessary_to_refresh %}
+          disabled
+          class="tooltip -tooltip-bottom _disabled"
+        {% endif %}
+      >更新
+      <span class="tooltiptext">
+        更新は1日1回です
+      </span>
+      </button>
+
   </form>
-  {% else %}
-    このユーザ({{ user_code }})は存在しません。作成しますか？
-    <form method="POST" action="{% url 'candfans_user_refresh' user_code %}">
-    {% csrf_token %}
-    <button type="submit">作成</button>
-    </form>
-  {% endif %}
+  <div>
+    <a href="{% url 'index' %}">Back to Top.</a>
+  </div>
 </div>
 <script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
 </body>
