@@ -4,13 +4,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
 	<link rel="stylesheet" type="text/css" href="https://rawgit.com/outboxcraft/beauter/master/beauter.min.css"/>
-
   <title>{{ candfans_user.user_code }}さんの情報</title>
-  <style>
-    .container {
-        padding: 10px;
-    }
-  </style>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const summaryStats = JSON.parse('{{ summary_stats | escapejs }}');
+  </script>
 </head>
 <body>
 
@@ -20,59 +19,28 @@
     <a href="javascript:void(0);" onclick="topnav('topNav')">☰</a>
   </li>
 </ul>
-
-<div class="container _alignCenter" style="height:250px">
-  <table class="_width100">
-    <tbody>
-      <tr>
-        <td>ユーザーID</td>
-        <td>{{ candfans_user.user_id }}</td>
-      </tr>
-      <tr>
-        <td>ユーザーコード</td>
-        <td>{{ candfans_user.user_code }}</td>
-      </tr>
-      <tr>
-        <td>ユーザーネーム</td>
-        <td>{{ candfans_user.username }}</td>
-      </tr>
-      <tr>
-        <td>同期状況</td>
-        {% if candfans_user.sync_status %}
-          <td>{{ candfans_user.sync_status.label }}</td>
-        {% else %}
-          <td>未同期</td>
-        {% endif %}
-      </tr>
-      <tr>
-        <td>最終同期時刻</td>
-        <td>{{ candfans_user.last_synced_at }}</td>
-      </tr>
-      <tr>
-        <td>最終同期開始時刻</td>
-        <td>{{ candfans_user.sync_requested_at }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <form method="POST" action="{% url 'candfans_user_refresh' user_code %}">
-    {% csrf_token %}
-      <button
-        type="submit"
-        {% if not candfans_user.is_necessary_to_refresh %}
-          disabled
-          class="tooltip -tooltip-bottom _disabled"
-        {% endif %}
-      >更新
-      <span class="tooltiptext">
-        更新は1日1回です
-      </span>
-      </button>
-
-  </form>
-  <div>
-    <a href="{% url 'index' %}">Back to Top.</a>
-  </div>
+<div class="tab">
+  <button class="tablinks _small" onclick="opentab('tab1')">基本情報</button>
+  <button class="tablinks _small" onclick="opentab('tab2')">投稿月別分析</button>
+  <button class="tablinks _small" onclick="opentab('tab3')">投稿内容分析</button>
 </div>
+
+<div id="tab1" class="tabcontent">
+  {% include 'users/info.j2' %}
+</div>
+
+<div id="tab2" class="tabcontent">
+  {% include 'users/analyze1.j2' %}
+</div>
+
+
+<div class="_alignCenter">
+  <a href="{% url 'index' %}">Back to Top.</a>
+</div>
+
 <script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
+<script>
+  opentab('tab1');
+</script>
 </body>
 </html>

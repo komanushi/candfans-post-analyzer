@@ -65,3 +65,10 @@ class CandfansPost(models.Model):
             unique_fields=['post_id'],
             update_fields=field_names,
         )
+
+    @classmethod
+    async def get_list_by_user_id(cls, user_id: int) -> list['CandfansPost']:
+        posts = []
+        async for post in cls.objects.filter(user_id=user_id).order_by('post_date'):
+            posts.append(post)
+        return posts

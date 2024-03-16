@@ -31,6 +31,9 @@ class CandfansRequestView(View):
 
         if candfans_user:
             context['candfans_user'] = candfans_user
+            stats = await analyzer_sv.get_post_stats(user=candfans_user)
+            context['summary_stats'] = stats.model_dump_json(indent=4)
+            print(stats.model_dump_json(indent=4))
         return render(
             request,
             'user.j2',

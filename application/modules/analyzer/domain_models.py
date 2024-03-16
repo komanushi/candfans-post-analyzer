@@ -174,3 +174,19 @@ class CandfansPlanModel(BaseModel):
             entry_disabled=param.entry_disabled,
             upper_limit_entry_cnt=param.upper_limit_entry_cnt,
         )
+
+
+class DataSet(BaseModel):
+    label: str
+    data: list[int]
+
+
+class Stat(BaseModel):
+    labels: list[str]
+    datasets: list[DataSet]
+
+
+class Stats(BaseModel):
+    monthly_post_type_stats: Stat
+    monthly_content_type_stats: Stat
+

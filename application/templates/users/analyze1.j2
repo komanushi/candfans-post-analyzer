@@ -1,0 +1,71 @@
+
+  <div class="container">
+    <canvas id="monthly_post_type_stats"></canvas>
+  </div>
+
+  <div class="container">
+    <canvas id="monthly_content_type_stats"></canvas>
+  </div>
+
+  <script>
+    function create_monthly_post_type_stats() {
+      const ctx = document.getElementById('monthly_post_type_stats');
+      const stats = summaryStats['monthly_post_type_stats'];
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: stats.labels,
+          datasets: stats.datasets,
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              stacked: true,
+            },
+            y: {
+              stacked: true
+            }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: '月別投稿数'
+            },
+          },
+        },
+      });
+    }
+    function create_monthly_content_type_stats() {
+      const ctx = document.getElementById('monthly_content_type_stats');
+      const stats = summaryStats['monthly_content_type_stats'];
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: stats.labels,
+          datasets: stats.datasets,
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              stacked: true,
+            },
+            y: {
+              stacked: true
+            }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: '月別コンテンツタイプ別投稿数'
+            },
+          },
+        },
+      });
+    }
+
+    create_monthly_post_type_stats()
+    create_monthly_content_type_stats()
+
+</script>

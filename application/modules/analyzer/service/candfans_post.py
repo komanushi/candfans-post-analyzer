@@ -1,7 +1,17 @@
-from candfans_client.models.timeline import Post
+from collections import defaultdict
+from candfans_client.models.timeline import Post, PostType
 
+from ..domain_models import (
+    CandfansUserModel,
+    Stat,
+    Stats,
+    DataSet,
+)
 from ..models import CandfansPost, CandFansPostPlanRelation, CandfansPlan
-from ..converter import convert_from_post_to_candfans_post
+from ..converter import (
+    convert_from_post_to_candfans_post,
+    convert_from_candfans_post_to_post
+)
 
 
 async def update_or_create_candfans_post(
@@ -33,3 +43,85 @@ async def update_or_create_candfans_post(
     await CandFansPostPlanRelation.bulk_create(rels)
 
     return len(new_post_map.items())
+
+
+async def get_post_stats(user: CandfansUserModel) -> Stats:
+    posts = await CandfansPost.get_list_by_user_id(user_id=user.user_id)
+    monthly_aggregated = _aggregate_monthly(posts)
+    post_type_stats = _create_post_type_stats(monthly_aggregated)
+    content_type_stats = _create_content_type_stats(monthly_aggregated)
+    return Stats(
+        monthly_post_type_stats=post_type_stats,
+        monthly_content_type_stats=content_type_stats,
+    )
+
+
+def _aggregate_monthly(posts: list[CandfansPost]) -> dict[str, list[CandfansPost]]:
+    monthly_data = defaultdict(list)
+
+    for post in posts:
+        monthly_data[post.month].append(post)
+    return monthly_data
+
+
+def _create_post_type_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]]):
+    return Stat(
+        labels=monthly_aggregated_posts.keys(),
+        datasets=[
+            DataSet(
+                label='公開投稿',
+                data=[
+                    len([p for p in posts if p.post_type == PostType.PUBLIC_ITEM.value])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+            DataSet(
+                label='限定投稿',
+                data=[
+                    len(
+                        [
+                            p for p in posts if p.post_type in [
+                                PostType.LIMITED_ACCESS_ITEM.value, PostType.BACK_NUMBER_ITEM.value
+                            ]
+                        ]
+                    )
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+            DataSet(
+                label='単品販売',
+                data=[
+                    len(
+                        [
+                            p for p in posts if p.post_type in [
+                                PostType.INDIVIDUAL_ITEM.value
+                            ]
+                        ]
+                    )
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+        ],
+    )
+
+
+def _create_content_type_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]]):
+    return Stat(
+        labels=monthly_aggregated_posts.keys(),
+        datasets=[
+            DataSet(
+                label='動画',
+                data=[
+                    len([p for p in posts if p.contents_type == 2])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+            DataSet(
+                label='写真',
+                data=[
+                    len([p for p in posts if p.contents_type == 1])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+        ],
+    )
