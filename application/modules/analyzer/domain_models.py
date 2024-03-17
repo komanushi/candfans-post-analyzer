@@ -186,7 +186,24 @@ class Stat(BaseModel):
     datasets: list[DataSet]
 
 
+class PostTypeStat(BaseModel):
+    public_item: int
+    limited_access_item: int
+    individual_item: int
+    back_number_item: int
+
+    @property
+    def total_item(self):
+        return (
+            self.public_item
+            + self.limited_access_item
+            + self.individual_item
+            + self.back_number_item
+        )
+
+
 class Stats(BaseModel):
+    total_post_type_stats: PostTypeStat
     monthly_post_type_stats: Stat
     monthly_content_type_stats: Stat
 

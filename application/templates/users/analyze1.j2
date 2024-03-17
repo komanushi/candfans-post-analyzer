@@ -1,9 +1,9 @@
 
-  <div class="container">
+  <div class="container graph-container">
     <canvas id="monthly_post_type_stats"></canvas>
   </div>
 
-  <div class="container">
+  <div class="container graph-container">
     <canvas id="monthly_content_type_stats"></canvas>
   </div>
 
@@ -19,6 +19,7 @@
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           scales: {
             x: {
               stacked: true,
@@ -47,6 +48,7 @@
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           scales: {
             x: {
               stacked: true,
@@ -69,3 +71,9 @@
     create_monthly_content_type_stats()
 
 </script>
+<style>
+  .graph-container {
+      height: 300px;
+      max-width: 400px;
+  }
+</style>

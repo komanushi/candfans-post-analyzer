@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
 	<link rel="stylesheet" type="text/css" href="https://rawgit.com/outboxcraft/beauter/master/beauter.min.css"/>
   <title>{{ candfans_user.user_code }}さんの情報</title>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const summaryStats = JSON.parse('{{ summary_stats | escapejs }}');
@@ -20,9 +21,9 @@
   </li>
 </ul>
 <div class="tab">
-  <button class="tablinks _small" onclick="opentab('tab1')">基本情報</button>
-  <button class="tablinks _small" onclick="opentab('tab2')">投稿月別分析</button>
-  <button class="tablinks _small" onclick="opentab('tab3')">投稿内容分析</button>
+  <button class="tablinks _small" onclick="toTab('tab1')">基本情報</button>
+  <button class="tablinks _small" onclick="toTab('tab2')">投稿月別分析</button>
+  <button class="tablinks _small" onclick="toTab('tab3')">投稿内容分析</button>
 </div>
 
 <div id="tab1" class="tabcontent">
@@ -40,7 +41,19 @@
 
 <script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
 <script>
-  opentab('tab1');
+  function toTab(tabName) {
+    location.hash = tabName
+    console.log(location.hash)
+    opentab(tabName)
+  }
+  function initTab() {
+    if(location.hash) {
+      toTab(location.hash.replace('#', ''))
+    } else {
+      toTab('tab2')
+    }
+  }
+  initTab()
 </script>
 </body>
 </html>

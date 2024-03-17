@@ -13,6 +13,10 @@
         <td>{{ candfans_user.username }}</td>
       </tr>
       <tr>
+        <td>投稿数</td>
+        <td>{{ stats.total_post_type_stats.total_item }}</td>
+      </tr>
+      <tr>
         <td>同期状況</td>
         {% if candfans_user.sync_status %}
           <td>{{ candfans_user.sync_status.label }}</td>

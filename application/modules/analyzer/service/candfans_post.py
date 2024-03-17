@@ -5,7 +5,7 @@ from ..domain_models import (
     CandfansUserModel,
     Stat,
     Stats,
-    DataSet,
+    DataSet, PostTypeStat,
 )
 from ..models import CandfansPost, CandFansPostPlanRelation, CandfansPlan
 from ..converter import (
@@ -51,6 +51,12 @@ async def get_post_stats(user: CandfansUserModel) -> Stats:
     post_type_stats = _create_post_type_stats(monthly_aggregated)
     content_type_stats = _create_content_type_stats(monthly_aggregated)
     return Stats(
+        total_post_type_stats=PostTypeStat(
+            public_item=len([p for p in posts if p.post_type == PostType.PUBLIC_ITEM.value]),
+            limited_access_item=len([p for p in posts if p.post_type == PostType.LIMITED_ACCESS_ITEM.value]),
+            individual_item=len([p for p in posts if p.post_type == PostType.INDIVIDUAL_ITEM.value]),
+            back_number_item=len([p for p in posts if p.post_type == PostType.BACK_NUMBER_ITEM.value]),
+        ),
         monthly_post_type_stats=post_type_stats,
         monthly_content_type_stats=content_type_stats,
     )
@@ -58,7 +64,6 @@ async def get_post_stats(user: CandfansUserModel) -> Stats:
 
 def _aggregate_monthly(posts: list[CandfansPost]) -> dict[str, list[CandfansPost]]:
     monthly_data = defaultdict(list)
-
     for post in posts:
         monthly_data[post.month].append(post)
     return monthly_data
