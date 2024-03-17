@@ -48,8 +48,6 @@ async def update_or_create_candfans_post(
 async def get_post_stats(user: CandfansUserModel) -> Stats:
     posts = await CandfansPost.get_list_by_user_id(user_id=user.user_id)
     monthly_aggregated = _aggregate_monthly(posts)
-    post_type_stats = _create_post_type_stats(monthly_aggregated)
-    content_type_stats = _create_content_type_stats(monthly_aggregated)
     return Stats(
         total_post_type_stats=PostTypeStat(
             public_item=len([p for p in posts if p.post_type == PostType.PUBLIC_ITEM.value]),
@@ -57,8 +55,10 @@ async def get_post_stats(user: CandfansUserModel) -> Stats:
             individual_item=len([p for p in posts if p.post_type == PostType.INDIVIDUAL_ITEM.value]),
             back_number_item=len([p for p in posts if p.post_type == PostType.BACK_NUMBER_ITEM.value]),
         ),
-        monthly_post_type_stats=post_type_stats,
-        monthly_content_type_stats=content_type_stats,
+        monthly_post_type_stats=_create_post_type_stats(monthly_aggregated),
+        monthly_content_type_stats=_create_content_type_stats(monthly_aggregated),
+        movie_stats=_create_movie_stats(monthly_aggregated),
+        photo_stats=_create_photo_stats(monthly_aggregated),
     )
 
 
@@ -129,4 +129,34 @@ def _create_content_type_stats(monthly_aggregated_posts: dict[str, list[Candfans
                 ]
             ),
         ],
+    )
+
+
+def _create_movie_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]]):
+    return Stat(
+        labels=monthly_aggregated_posts.keys(),
+        datasets=[
+            DataSet(
+                label='動画時間(分)',
+                data=[
+                    sum([p.movie_time / 60 for p in posts if p.contents_type == 2])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+        ]
+    )
+
+
+def _create_photo_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]]):
+    return Stat(
+        labels=monthly_aggregated_posts.keys(),
+        datasets=[
+            DataSet(
+                label='写真枚数',
+                data=[
+                    sum([p.image_count for p in posts if p.contents_type == 1])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+        ]
     )

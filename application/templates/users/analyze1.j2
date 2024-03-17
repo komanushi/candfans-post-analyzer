@@ -2,12 +2,17 @@
   <div class="container graph-container">
     <canvas id="monthly_post_type_stats"></canvas>
   </div>
-
   <div class="container graph-container">
     <canvas id="monthly_content_type_stats"></canvas>
   </div>
-
+  <div class="container graph-container">
+    <canvas id="movie_stats"></canvas>
+  </div>
+  <div class="container graph-container">
+    <canvas id="photo_stats"></canvas>
+  </div>
   <script>
+
     function create_monthly_post_type_stats() {
       const ctx = document.getElementById('monthly_post_type_stats');
       const stats = summaryStats['monthly_post_type_stats'];
@@ -67,8 +72,62 @@
       });
     }
 
+    function create_photo_stats() {
+      const ctx = document.getElementById('photo_stats');
+      const stats = summaryStats['photo_stats'];
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: stats.labels,
+          datasets: stats.datasets,
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {},
+            y: {},
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: '写真投稿分析'
+            },
+          },
+        },
+      });
+    }
+
+    function create_movie_stats() {
+      const ctx = document.getElementById('movie_stats');
+      const stats = summaryStats['movie_stats'];
+      const ds = stats.datasets
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: stats.labels,
+          datasets: ds,
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {},
+            y: {},
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: '動画投稿分析'
+            },
+          },
+        },
+      });
+    }
     create_monthly_post_type_stats()
     create_monthly_content_type_stats()
+    create_movie_stats()
+    create_photo_stats()
 
 </script>
 <style>

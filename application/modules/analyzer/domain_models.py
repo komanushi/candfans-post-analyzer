@@ -178,7 +178,7 @@ class CandfansPlanModel(BaseModel):
 
 class DataSet(BaseModel):
     label: str
-    data: list[int]
+    data: list[int | float]
 
 
 class Stat(BaseModel):
@@ -206,4 +206,5 @@ class Stats(BaseModel):
     total_post_type_stats: PostTypeStat
     monthly_post_type_stats: Stat
     monthly_content_type_stats: Stat
-
+    movie_stats: Stat
+    photo_stats: Stat

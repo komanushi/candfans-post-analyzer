@@ -9,16 +9,24 @@
   <title>CandfansAnalyzer</title>
 </head>
 <body>
-<div class="jumbo _info">
-  <h3>Welcome to Candfans Analyzer</h3>
-  <form action="{% url 'index' %}" method="POST">
+<div class="jumbo _info box">
+  <h3>Candfans Analyzer</h3>
+  <form action="{% url 'index' %}" method="POST" style="width: 90%">
     {% csrf_token %}
-    <input type="text" name="user_code" placeholder="user_code" style="width: 200px">
+    <input type="text" name="user_code" placeholder="user_code" style="width: 60%;max-width: 500px;">
     <button type="submit" class="_primary">分析</button>
   </form>
 </div>
-<div>
-</div>
 <script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
+<style>
+  .box {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+</style>
 </body>
 </html>
