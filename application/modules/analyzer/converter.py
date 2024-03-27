@@ -10,7 +10,8 @@ from .domain_models import (
     CandfansUserModel,
     CandfansUserDetailModel,
     CandfansPlanModel,
-    SyncStatus
+    SyncStatus,
+    PlanSummaryModel
 )
 
 
@@ -95,6 +96,16 @@ def convert_to_candfans_plan_model(plan: CandfansPlan) -> CandfansPlanModel:
         done_transfar_limit_backnumber=plan.done_transfar_limit_backnumber,
         entry_disabled=plan.entry_disabled,
         upper_limit_entry_cnt=plan.upper_limit_entry_cnt,
+    )
+
+
+def convert_to_plan_summary(plan: CandfansPlan) -> PlanSummaryModel:
+    return PlanSummaryModel(
+        plan_id=plan.plan_id,
+        plan_name=plan.plan_name,
+        support_price=plan.support_price,
+        plan_detail=plan.plan_detail,
+        backnumber_price=plan.backnumber_price,
     )
 
 

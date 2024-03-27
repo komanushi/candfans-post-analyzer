@@ -9,6 +9,7 @@ from modules.analyzer.domain_models import SyncStatus
 from usecase import (
     users_case,
     plans_case,
+    stats_case,
 )
 
 
@@ -31,9 +32,10 @@ class CandfansRequestView(View):
 
         if candfans_user:
             context['candfans_user'] = candfans_user
-            stats = await analyzer_sv.get_post_stats(user=candfans_user)
-            context['stats'] = stats
-            context['summary_stats'] = stats.model_dump_json(indent=4)
+            user_stats = await stats_case.generate_stats(candfans_user)
+            context['stats'] = user_stats.stats
+            context['summary_stats_json'] = user_stats.summary_stats_json
+            context['plan_summaries'] = user_stats.plan_summaries
         return render(
             request,
             'user.j2',

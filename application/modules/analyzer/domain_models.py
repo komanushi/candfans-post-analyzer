@@ -208,3 +208,11 @@ class Stats(BaseModel):
     monthly_content_type_stats: Stat
     movie_stats: Stat
     photo_stats: Stat
+
+
+class PlanSummaryModel(BaseModel):
+    plan_id: int
+    plan_name: str
+    support_price: int
+    plan_detail: str
+    backnumber_price: Optional[int]

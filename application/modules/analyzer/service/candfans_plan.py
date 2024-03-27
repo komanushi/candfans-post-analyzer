@@ -3,6 +3,7 @@ from ..models import CandfansPlan, CandfansPlanFansHistory
 from ..domain_models import (
     CandfansPlanModel,
     CandfansUserModel,
+    PlanSummaryModel,
 )
 
 
@@ -31,3 +32,8 @@ async def sync_candfans_plan(plans: list[CandfansPlanModel], user: CandfansUserM
         exclude_plan_ids=[p.plan_id for p in plans]
     )
     return [converter.convert_to_candfans_plan_model(p) for p in new_plans]
+
+
+async def get_candfans_plan_summaries_by_user(user: CandfansUserModel) -> list[PlanSummaryModel]:
+    plans = await CandfansPlan.get_list_by_user_id(user.user_id)
+    return [converter.convert_to_plan_summary(p) for p in plans]

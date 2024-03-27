@@ -9,7 +9,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const summaryStats = JSON.parse('{{ summary_stats | escapejs }}');
+    const summaryStats = JSON.parse('{{ summary_stats_json | escapejs }}');
   </script>
 </head>
 <body>
@@ -22,8 +22,8 @@
 </ul>
 <div class="tab">
   <button class="tablinks _small" onclick="toTab('tab1')">基本情報</button>
-  <button class="tablinks _small" onclick="toTab('tab2')">投稿月別分析</button>
-  <button class="tablinks _small" onclick="toTab('tab3')">投稿内容分析</button>
+  <button class="tablinks _small" onclick="toTab('tab2')">投稿月間分析</button>
+  <button class="tablinks _small" onclick="toTab('tab3')">投稿週間分析</button>
 </div>
 
 <div id="tab1" class="tabcontent">

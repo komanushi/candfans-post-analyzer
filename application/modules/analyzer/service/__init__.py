@@ -9,6 +9,7 @@ from .candfans_user import (
 )
 from .candfans_plan import (
     create_candfans_plan,
+    get_candfans_plan_summaries_by_user,
     sync_candfans_plan,
 )
 from .candfans_post import (
@@ -27,6 +28,7 @@ __all__ = [
     'get_candfans_user_by_user_code',
     # plan
     'create_candfans_plan',
+    'get_candfans_plan_summaries_by_user',
     'sync_candfans_plan',
     # post
     'get_post_stats',
