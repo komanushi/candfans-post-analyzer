@@ -5,7 +5,7 @@ from candfans_client.models.timeline import Post, PostType, ShortPlan
 from ..domain_models import (
     CandfansUserModel,
     Stat,
-    Stats,
+    MonthlyStats,
     DataSet, PostTypeStat,
 )
 from .candfans_plan import get_candfans_plans_by_user
@@ -47,7 +47,7 @@ async def update_or_create_candfans_post(
     return len(new_post_map.items())
 
 
-async def get_post_stats(user: CandfansUserModel) -> Stats:
+async def get_monthly_post_stats(user: CandfansUserModel) -> MonthlyStats:
     posts = await CandfansPost.get_list_by_user_id(user_id=user.user_id)
     plans = await get_candfans_plans_by_user(user=user)
     plan_id_map = {p.plan_id: p for p in plans}
@@ -57,7 +57,7 @@ async def get_post_stats(user: CandfansUserModel) -> Stats:
         post_rel_map[rel.candfans_post_id].append(plan_id_map.get(int(rel.candfans_plan_id)))
     posts = [convert_from_candfans_post_to_post(p, post_rel_map.get(p.post_id, [])) for p in posts]
     monthly_aggregated = _aggregate_monthly(posts)
-    return Stats(
+    return MonthlyStats(
         total_post_type_stats=PostTypeStat(
             public_item=len([p for p in posts if p.post_type == PostType.PUBLIC_ITEM.value]),
             limited_access_item=len([p for p in posts if p.post_type == PostType.LIMITED_ACCESS_ITEM.value]),
@@ -84,7 +84,7 @@ def _aggregate_monthly(posts: list[Post]) -> dict[str, list[Post]]:
         months.add(
             (min_month + timedelta(days=d+1)).strftime('%Y-%m')
         )
-    monthly_data = {m: [] for m in months}
+    monthly_data = {m: [] for m in sorted(months)}
     for post in posts:
         monthly_data[post.month].append(post)
 

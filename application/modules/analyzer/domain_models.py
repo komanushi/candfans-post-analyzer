@@ -202,7 +202,7 @@ class PostTypeStat(BaseModel):
         )
 
 
-class Stats(BaseModel):
+class MonthlyStats(BaseModel):
     total_post_type_stats: PostTypeStat
     monthly_post_type_stats: Stat
     monthly_content_type_stats: Stat

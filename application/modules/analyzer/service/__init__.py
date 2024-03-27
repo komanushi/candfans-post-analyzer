@@ -14,7 +14,7 @@ from .candfans_plan import (
 )
 from .candfans_post import (
     update_or_create_candfans_post,
-    get_post_stats,
+    get_monthly_post_stats,
 )
 
 __all__ = [
@@ -31,6 +31,6 @@ __all__ = [
     'get_candfans_plan_summaries_by_user',
     'sync_candfans_plan',
     # post
-    'get_post_stats',
+    'get_monthly_post_stats',
     'update_or_create_candfans_post',
 ]

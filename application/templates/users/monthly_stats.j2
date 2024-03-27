@@ -19,7 +19,7 @@
 
     function create_monthly_post_type_stats() {
       const ctx = document.getElementById('monthly_post_type_stats');
-      const stats = summaryStats['monthly_post_type_stats'];
+      const stats = summaryMonthlyStats['monthly_post_type_stats'];
       new Chart(ctx, {
         type: 'bar',
         data: {
@@ -48,7 +48,7 @@
     }
     function create_monthly_limited_item_stats() {
       const ctx = document.getElementById('monthly_limited_item_stats');
-      const stats = summaryStats['monthly_limited_item_stats'];
+      const stats = summaryMonthlyStats['monthly_limited_item_stats'];
       new Chart(ctx, {
         type: 'bar',
         data: {
@@ -77,7 +77,7 @@
     }
     function create_monthly_content_type_stats() {
       const ctx = document.getElementById('monthly_content_type_stats');
-      const stats = summaryStats['monthly_content_type_stats'];
+      const stats = summaryMonthlyStats['monthly_content_type_stats'];
       new Chart(ctx, {
         type: 'bar',
         data: {
@@ -108,7 +108,7 @@
 
     function create_photo_stats() {
       const ctx = document.getElementById('photo_stats');
-      const stats = summaryStats['photo_stats'];
+      const stats = summaryMonthlyStats['photo_stats'];
       new Chart(ctx, {
         type: 'bar',
         data: {
@@ -134,7 +134,7 @@
 
     function create_movie_stats() {
       const ctx = document.getElementById('movie_stats');
-      const stats = summaryStats['movie_stats'];
+      const stats = summaryMonthlyStats['movie_stats'];
       const ds = stats.datasets
       new Chart(ctx, {
         type: 'bar',

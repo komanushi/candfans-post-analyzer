@@ -33,8 +33,8 @@ class CandfansRequestView(View):
         if candfans_user:
             context['candfans_user'] = candfans_user
             user_stats = await stats_case.generate_stats(candfans_user)
-            context['stats'] = user_stats.stats
-            context['summary_stats_json'] = user_stats.summary_stats_json
+            context['monthly_stats'] = user_stats.monthly_stats
+            context['summary_monthly_stats_json'] = user_stats.summary_monthly_stats_json
             context['plan_summaries'] = user_stats.plan_summaries
         return render(
             request,
