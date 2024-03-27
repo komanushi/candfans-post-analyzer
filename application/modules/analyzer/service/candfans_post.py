@@ -91,6 +91,15 @@ def _aggregate_monthly(posts: list[Post]) -> dict[str, list[Post]]:
     return monthly_data
 
 
+def _is_free(post: Post) -> bool:
+    plans = post.plans
+    if post.post_type == PostType.PUBLIC_ITEM.value:
+        return True
+    if any([p.support_price == 0 for p in plans]):
+        return True
+    return False
+
+
 def _create_post_type_stats(monthly_aggregated_posts: dict[str, list[Post]]):
     return Stat(
         labels=monthly_aggregated_posts.keys(),
@@ -159,9 +168,16 @@ def _create_movie_stats(monthly_aggregated_posts: dict[str, list[Post]]):
         labels=monthly_aggregated_posts.keys(),
         datasets=[
             DataSet(
-                label='動画時間(分)',
+                label='無料動画時間(分)',
                 data=[
-                    sum([p.movie_time / 60 for p in posts if p.contents_type == 2])
+                    sum([p.movie_time / 60 for p in posts if p.contents_type == 2 and _is_free(p)])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+            DataSet(
+                label='有料動画時間(分)',
+                data=[
+                    sum([p.movie_time / 60 for p in posts if p.contents_type == 2 and not _is_free(p)])
                     for posts in monthly_aggregated_posts.values()
                 ]
             ),
@@ -174,9 +190,16 @@ def _create_photo_stats(monthly_aggregated_posts: dict[str, list[Post]]):
         labels=monthly_aggregated_posts.keys(),
         datasets=[
             DataSet(
-                label='写真枚数',
+                label='無料写真枚数',
                 data=[
-                    sum([p.image_count for p in posts if p.contents_type == 1])
+                    sum([p.image_count for p in posts if p.contents_type == 1 and _is_free(p)])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+            DataSet(
+                label='有料写真枚数',
+                data=[
+                    sum([p.image_count for p in posts if p.contents_type == 1 and not _is_free(p)])
                     for posts in monthly_aggregated_posts.values()
                 ]
             ),
@@ -187,11 +210,6 @@ def _create_photo_stats(monthly_aggregated_posts: dict[str, list[Post]]):
 def _create_limited_item_stats(
     monthly_aggregated_posts: dict[str, list[Post]]
 ):
-    def _is_free(post: Post) -> bool:
-        plans = post.plans
-        if any([p.support_price == 0 for p in plans]):
-            return True
-        return False
 
     return Stat(
         labels=monthly_aggregated_posts.keys(),
