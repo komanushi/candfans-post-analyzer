@@ -5,8 +5,8 @@ from .candfans_plan import CandfansPlan
 
 
 class CandFansPostPlanRelation(models.Model):
-    candfans_plan = models.ForeignKey('CandfansPlan', on_delete=models.CASCADE)
-    candfans_post = models.ForeignKey('CandfansPost', on_delete=models.CASCADE)
+    candfans_plan = models.ForeignKey('CandfansPlan', on_delete=models.CASCADE, related_name='candfans_plan_rel')
+    candfans_post = models.ForeignKey('CandfansPost', on_delete=models.CASCADE, related_name='candfans_post_rel')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -39,4 +39,11 @@ class CandFansPostPlanRelation(models.Model):
 
     @classmethod
     async def delete_by_post(cls, candfans_post: CandfansPost):
-        return cls.objects.filter(candfans_post=candfans_post).delete()
+        return cls.objects.filter(candfans_post=candfans_post).adelete()
+
+    @classmethod
+    async def get_list_by_post_ids(cls, candfans_post_ids: list[int]) -> list['CandFansPostPlanRelation']:
+        rels = []
+        async for rel in cls.objects.filter(candfans_post_id__in=candfans_post_ids):
+            rels.append(rel)
+        return rels

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from candfans_client.models.timeline import Post, PostType
+from candfans_client.models.timeline import Post, PostType, ShortPlan
 
 from ..domain_models import (
     CandfansUserModel,
@@ -7,6 +7,7 @@ from ..domain_models import (
     Stats,
     DataSet, PostTypeStat,
 )
+from .candfans_plan import get_candfans_plans_by_user
 from ..models import CandfansPost, CandFansPostPlanRelation, CandfansPlan
 from ..converter import (
     convert_from_post_to_candfans_post,
@@ -47,6 +48,13 @@ async def update_or_create_candfans_post(
 
 async def get_post_stats(user: CandfansUserModel) -> Stats:
     posts = await CandfansPost.get_list_by_user_id(user_id=user.user_id)
+    plans = await get_candfans_plans_by_user(user=user)
+    plan_id_map = {p.plan_id: p for p in plans}
+    rels = await CandFansPostPlanRelation.get_list_by_post_ids(candfans_post_ids=[p.post_id for p in posts])
+    post_rel_map = defaultdict(list)
+    for rel in rels:
+        post_rel_map[rel.candfans_post_id].append(plan_id_map.get(int(rel.candfans_plan_id)))
+    posts = [convert_from_candfans_post_to_post(p, post_rel_map.get(p.post_id, [])) for p in posts]
     monthly_aggregated = _aggregate_monthly(posts)
     return Stats(
         total_post_type_stats=PostTypeStat(
@@ -57,19 +65,21 @@ async def get_post_stats(user: CandfansUserModel) -> Stats:
         ),
         monthly_post_type_stats=_create_post_type_stats(monthly_aggregated),
         monthly_content_type_stats=_create_content_type_stats(monthly_aggregated),
+        monthly_limited_item_stats=_create_limited_item_stats(monthly_aggregated),
         movie_stats=_create_movie_stats(monthly_aggregated),
         photo_stats=_create_photo_stats(monthly_aggregated),
     )
 
 
-def _aggregate_monthly(posts: list[CandfansPost]) -> dict[str, list[CandfansPost]]:
+def _aggregate_monthly(posts: list[Post]) -> dict[str, list[Post]]:
     monthly_data = defaultdict(list)
     for post in posts:
         monthly_data[post.month].append(post)
+    # TODO ヌケモレ月間処理する
     return monthly_data
 
 
-def _create_post_type_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]]):
+def _create_post_type_stats(monthly_aggregated_posts: dict[str, list[Post]]):
     return Stat(
         labels=monthly_aggregated_posts.keys(),
         datasets=[
@@ -110,7 +120,7 @@ def _create_post_type_stats(monthly_aggregated_posts: dict[str, list[CandfansPos
     )
 
 
-def _create_content_type_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]]):
+def _create_content_type_stats(monthly_aggregated_posts: dict[str, list[Post]]):
     return Stat(
         labels=monthly_aggregated_posts.keys(),
         datasets=[
@@ -132,7 +142,7 @@ def _create_content_type_stats(monthly_aggregated_posts: dict[str, list[Candfans
     )
 
 
-def _create_movie_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]]):
+def _create_movie_stats(monthly_aggregated_posts: dict[str, list[Post]]):
     return Stat(
         labels=monthly_aggregated_posts.keys(),
         datasets=[
@@ -147,7 +157,7 @@ def _create_movie_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]])
     )
 
 
-def _create_photo_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]]):
+def _create_photo_stats(monthly_aggregated_posts: dict[str, list[Post]]):
     return Stat(
         labels=monthly_aggregated_posts.keys(),
         datasets=[
@@ -159,4 +169,46 @@ def _create_photo_stats(monthly_aggregated_posts: dict[str, list[CandfansPost]])
                 ]
             ),
         ]
+    )
+
+
+def _create_limited_item_stats(
+    monthly_aggregated_posts: dict[str, list[Post]]
+):
+    def _is_free(post: Post) -> bool:
+        plans = post.plans
+        if any([p.support_price == 0 for p in plans]):
+            return True
+        return False
+
+    return Stat(
+        labels=monthly_aggregated_posts.keys(),
+        datasets=[
+            DataSet(
+                label='無料プラン',
+                data=[
+                    len([
+                        p for p in posts
+                        if p.post_type in [
+                            PostType.LIMITED_ACCESS_ITEM.value, PostType.BACK_NUMBER_ITEM.value
+                        ]
+                        and _is_free(p)
+                    ])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+            DataSet(
+                label='有料プラン',
+                data=[
+                    len([
+                        p for p in posts
+                        if p.post_type in [
+                            PostType.LIMITED_ACCESS_ITEM.value, PostType.BACK_NUMBER_ITEM.value
+                        ]
+                        and not _is_free(p)
+                    ])
+                    for posts in monthly_aggregated_posts.values()
+                ]
+            ),
+        ],
     )

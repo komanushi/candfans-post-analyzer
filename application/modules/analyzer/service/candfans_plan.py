@@ -34,6 +34,11 @@ async def sync_candfans_plan(plans: list[CandfansPlanModel], user: CandfansUserM
     return [converter.convert_to_candfans_plan_model(p) for p in new_plans]
 
 
+async def get_candfans_plans_by_user(user: CandfansUserModel) -> list[CandfansPlanModel]:
+    plans = await CandfansPlan.get_list_by_user_id(user.user_id)
+    return [converter.convert_to_candfans_plan_model(p) for p in plans]
+
+
 async def get_candfans_plan_summaries_by_user(user: CandfansUserModel) -> list[PlanSummaryModel]:
     plans = await CandfansPlan.get_list_by_user_id(user.user_id)
     return [converter.convert_to_plan_summary(p) for p in plans]

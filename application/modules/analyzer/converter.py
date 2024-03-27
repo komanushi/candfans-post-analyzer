@@ -1,4 +1,4 @@
-from candfans_client.models.timeline import Post
+from candfans_client.models.timeline import Post, ShortPlan
 
 from .models import (
     CandfansUser,
@@ -152,7 +152,7 @@ def convert_from_post_to_candfans_post(post: Post) -> CandfansPost:
     )
 
 
-def convert_from_candfans_post_to_post(post: CandfansPost) -> Post:
+def convert_from_candfans_post_to_post(post: CandfansPost, plans: list[CandfansPlan]) -> Post:
     return Post(
         month=post.month,
         post_id=post.post_id,
@@ -192,4 +192,21 @@ def convert_from_candfans_post_to_post(post: CandfansPost) -> Post:
         has_own_thumbnail=post.has_own_thumbnail,
         is_on_air=post.is_on_air,
         live_url=post.live_url,
+        plans=[
+            ShortPlan(
+                plan_id=p.plan_id,
+                support_price=p.support_price,
+                total_support_price=p.total_support_price,
+                plan_name=p.plan_name,
+                plan_detail=p.plan_detail,
+                backnumber_id=None,
+                backnumber_price=p.backnumber_price,
+                total_backnumber_price=None,
+                can_see_backnumber_plan_pay=p.can_see_backnumber_plan_pay,
+                can_buy_backnumber_not_entry_plan=p.can_buy_backnumber_not_entry_plan,
+                add_backnumber_date=None,
+                is_joined_plan=False
+            )
+            for p in plans
+        ],
     )

@@ -6,6 +6,10 @@
     <canvas id="monthly_content_type_stats"></canvas>
   </div>
   <div class="container graph-container">
+    <canvas id="monthly_limited_item_stats"></canvas>
+  </div>
+  
+  <div class="container graph-container">
     <canvas id="movie_stats"></canvas>
   </div>
   <div class="container graph-container">
@@ -42,6 +46,35 @@
         },
       });
     }
+    function create_monthly_limited_item_stats() {
+      const ctx = document.getElementById('monthly_limited_item_stats');
+      const stats = summaryStats['monthly_limited_item_stats'];
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: stats.labels,
+          datasets: stats.datasets,
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              stacked: true,
+            },
+            y: {
+              stacked: true
+            }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: '月別価格別投稿数'
+            },
+          },
+        },
+      });
+    }
     function create_monthly_content_type_stats() {
       const ctx = document.getElementById('monthly_content_type_stats');
       const stats = summaryStats['monthly_content_type_stats'];
@@ -71,6 +104,7 @@
         },
       });
     }
+
 
     function create_photo_stats() {
       const ctx = document.getElementById('photo_stats');
@@ -126,6 +160,7 @@
     }
     create_monthly_post_type_stats()
     create_monthly_content_type_stats()
+    create_monthly_limited_item_stats()
     create_movie_stats()
     create_photo_stats()
 

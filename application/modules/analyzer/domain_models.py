@@ -206,6 +206,7 @@ class Stats(BaseModel):
     total_post_type_stats: PostTypeStat
     monthly_post_type_stats: Stat
     monthly_content_type_stats: Stat
+    monthly_limited_item_stats: Stat
     movie_stats: Stat
     photo_stats: Stat
 

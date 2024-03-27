@@ -21,17 +21,17 @@
   </li>
 </ul>
 <div class="tab">
-  <button class="tablinks _small" onclick="toTab('tab1')">基本情報</button>
-  <button class="tablinks _small" onclick="toTab('tab2')">投稿月間分析</button>
-  <button class="tablinks _small" onclick="toTab('tab3')">投稿週間分析</button>
+  <button class="tablinks _small" onclick="toTab('info')">基本情報</button>
+  <button class="tablinks _small" onclick="toTab('monthly_stats')">投稿月間分析</button>
+{#  <button class="tablinks _small" onclick="toTab('tab3')">投稿週間分析</button>#}
 </div>
 
-<div id="tab1" class="tabcontent">
+<div id="info" class="tabcontent">
   {% include 'users/info.j2' %}
 </div>
 
-<div id="tab2" class="tabcontent">
-  {% include 'users/analyze1.j2' %}
+<div id="monthly_stats" class="tabcontent">
+  {% include 'users/monthly_stats.j2' %}
 </div>
 
 
@@ -43,14 +43,13 @@
 <script>
   function toTab(tabName) {
     location.hash = tabName
-    console.log(location.hash)
     opentab(tabName)
   }
   function initTab() {
     if(location.hash) {
       toTab(location.hash.replace('#', ''))
     } else {
-      toTab('tab1')
+      toTab('info')
     }
   }
   initTab()

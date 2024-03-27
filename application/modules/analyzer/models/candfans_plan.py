@@ -56,14 +56,14 @@ class CandfansPlan(models.Model):
     @classmethod
     async def get_list_by_plan_ids(cls, plan_ids: list[int]) -> list['CandfansPlan']:
         plans = []
-        async for plan in cls.objects.filter(plan_id__in=plan_ids):
+        async for plan in cls.objects.select_related('user', 'user__detail').filter(plan_id__in=plan_ids):
             plans.append(plan)
         return plans
 
     @classmethod
     async def get_list_by_user_id(cls, user_id: int) -> list['CandfansPlan']:
         plans = []
-        async for plan in cls.objects.filter(user__user_id=user_id):
+        async for plan in cls.objects.select_related('user', 'user__detail').filter(user__user_id=user_id):
             plans.append(plan)
         return plans
 

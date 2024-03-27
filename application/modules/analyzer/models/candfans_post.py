@@ -69,6 +69,7 @@ class CandfansPost(models.Model):
     @classmethod
     async def get_list_by_user_id(cls, user_id: int) -> list['CandfansPost']:
         posts = []
-        async for post in cls.objects.filter(user_id=user_id).order_by('post_date'):
+        query = cls.objects.prefetch_related('candfans_post_rel__candfans_post').filter(user_id=user_id).order_by('post_date')
+        async for post in query:
             posts.append(post)
         return posts
