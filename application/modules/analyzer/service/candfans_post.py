@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import timedelta, datetime
 from candfans_client.models.timeline import Post, PostType, ShortPlan
 
 from ..domain_models import (
@@ -72,10 +73,21 @@ async def get_post_stats(user: CandfansUserModel) -> Stats:
 
 
 def _aggregate_monthly(posts: list[Post]) -> dict[str, list[Post]]:
-    monthly_data = defaultdict(list)
+    posts = sorted(posts, key=lambda p: p.month)
+    if not posts:
+        return {}
+    # 1ヶ月投稿がない月が発生するとそこがグラフから消えるので範囲内の月を列挙する
+    min_month = datetime.strptime(posts[0].month, '%Y-%m')
+    max_month = datetime.strptime(posts[-1].month, '%Y-%m')
+    months = set()
+    for d in range((max_month - min_month).days):
+        months.add(
+            (min_month + timedelta(days=d+1)).strftime('%Y-%m')
+        )
+    monthly_data = {m: [] for m in months}
     for post in posts:
         monthly_data[post.month].append(post)
-    # TODO ヌケモレ月間処理する
+
     return monthly_data
 
 

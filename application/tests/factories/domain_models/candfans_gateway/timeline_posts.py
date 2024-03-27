@@ -29,7 +29,7 @@ class ShortPlanFactory(factory.Factory):
 class PostFactory(factory.Factory):
     class Meta:
         model = Post
-    month = '2024'
+    month = '2024-01'
     post_id = factory.Sequence(lambda n: n)
     user_id = factory.Sequence(lambda n: n)
     user_code = factory.Faker('user_name')
