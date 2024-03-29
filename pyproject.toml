@@ -23,6 +23,7 @@ freezegun = "^1.4.0"
 pgcli = "^4.0.1"
 gunicorn = "^21.2.0"
 uvicorn = "^0.29.0"
+dj-database-url = "^2.1.0"
 
 
 [build-system]

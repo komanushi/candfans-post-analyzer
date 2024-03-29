@@ -3,7 +3,7 @@ services:
   nginx:
     image: nginx:1.24-alpine
     volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/dev.conf:/etc/nginx/nginx.conf:ro
       - ./application/staticfiles:/usr/share/nginx/html/static:ro
     ports:
       - "8001:8000"
@@ -23,11 +23,7 @@ services:
     environment: &django_environment
       DJANGO_ENV: local
       PYTHONUNBUFFERED: 1
-      POSTGRES_DATABASE: candfans
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: docker
-      POSTGRES_HOSTNAME: db
-      POSTGRES_PORT: 5432
+      DATABASE_URL: 'postgresql://root:docker@db:5432/candfans'
       SECRET_KEY: $SECRET_KEY
       REDIS_HOSTNAME: redis
       REDIS_PORT: 6379
