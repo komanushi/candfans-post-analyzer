@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +11,12 @@
 </head>
 <body>
 <div class="jumbo _info box">
-  <h3>Candfans Analyzer</h3>
+  <div class="_width75">
+  <img
+    class="_width50"
+    src="{% static 'images/logo_main.png' %}
+  ">
+  </div>
   <form action="{% url 'index' %}" method="POST" style="width: 90%">
     {% csrf_token %}
     <input type="text" name="user_code" placeholder="user_code" style="width: 60%;max-width: 500px;">

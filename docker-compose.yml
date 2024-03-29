@@ -1,11 +1,20 @@
 version: '3.0'
 services:
+  nginx:
+    image: nginx:1.24-alpine
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/nginx.conf:ro
+      - ./application/staticfiles:/usr/share/nginx/html/static:ro
+    ports:
+      - "8001:8000"
+    links:
+      - app
   app:
     build:
       context: .
       dockerfile: ./docker/app/Dockerfile
     entrypoint: '/app/docker/app/entrypoint.dev.sh'
-    command: poetry run python ./manage.py runserver 0.0.0.0:8000 --insecure
+    command: poetry run watchmedo auto-restart -d ./application -R -p '*.py' -p '*.j2' --interval 3.0 -- poetry run gunicorn -- --config ./application/gunicorn_conf.py application.asgi:application
     working_dir: /app
     volumes:
       - ./docker/app/.bashrc:/root/.bashrc:ro
@@ -23,8 +32,6 @@ services:
       REDIS_HOSTNAME: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-    ports:
-      - "8001:8000"
     links:
       - db
       - redis
