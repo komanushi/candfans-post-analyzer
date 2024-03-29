@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: ./docker/app/Dockerfile
     entrypoint: '/app/docker/app/entrypoint.dev.sh'
-    command: poetry run watchmedo auto-restart -d ./application -R -p '*.py' -p '*.j2' --interval 3.0 -- poetry run gunicorn -- --config ./application/gunicorn_conf.py application.asgi:application
+    command: poetry run watchmedo auto-restart -d ./application -R -p '*.py;*.j2' --interval 3.0 -- poetry run gunicorn -- --config ./application/gunicorn_conf.py application.asgi:application
     working_dir: /app
     volumes:
       - ./docker/app/.bashrc:/root/.bashrc:ro

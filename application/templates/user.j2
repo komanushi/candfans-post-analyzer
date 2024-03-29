@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,8 +15,14 @@
 </head>
 <body>
 
-<ul class="topnav _primary" id="topNav">
-  <li><a href="{% url 'index' %}" class="brand">CandfansAnalyzer</a></li>
+<ul class="topnav _info" id="topNav">
+  <li>
+    <a href="{% url 'index' %}" style="width: 120px;">
+      <img
+        src="{% static 'images/logo_horizontal.png' %}
+      ">
+    </a>
+  </li>
   <li class="-icon">
     <a href="javascript:void(0);" onclick="topnav('topNav')">☰</a>
   </li>
