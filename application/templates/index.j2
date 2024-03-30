@@ -12,6 +12,53 @@
   />
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <style>
+  body {
+    width: 100vw;
+    height: 100vh;
+  }
+  .box {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #66AAff;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .logo_top {
+      max-width: 300px;
+      height: auto;
+  }
+  .history {
+      display: flex;
+      flex-direction: row;
+  }
+  .card {
+    padding-top: 5px;
+    width: 80px;
+    background-color: #c4dce8;
+    a {
+        text-decoration: none;
+        color: #333333;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+  }
+  .card_image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+  }
+  .swiper {
+    width: 70vw;
+    max-width: 600px;
+  }
+  </style>
   <title>CandfansAnalyzer</title>
 </head>
 <body>
@@ -25,10 +72,12 @@
   <form action="{% url 'index' %}" method="POST" style="width: 90%">
     {% csrf_token %}
     <input
-      type="text" name="user_code" placeholder="user_code" style="width: 60%;max-width: 500px;"
+      type="text" name="user_code" placeholder="user_code"
+      style="width: 60%;max-width: 500px;"
+      class="_shadow"
     />
     <div>
-      <button type="submit" class="_primary">分析</button>
+      <button type="submit" class="_primary _shadow">分析</button>
     </div>
   </form>
   <div class="swiper history">
@@ -48,6 +97,9 @@
       {% endfor %}
     </div>
   </div>
+</div>
+<div class="_width100">
+  © 2024 ABC Inc.
 </div>
 <script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
 <script>
@@ -69,50 +121,5 @@
     },
   });
 </script>
-<style>
-body {
-  width: 100vw;
-  height: 100vh;
-}
-.box {
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  background-color: #669cff;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.logo_top {
-    max-width: 300px;
-    height: auto;
-}
-.history {
-    display: flex;
-    flex-direction: row;
-}
-.card {
-  padding-top: 5px;
-  width: 80px;
-  background-color: #c4dce8;
-  a {
-      text-decoration: none;
-      color: #333333;
-      font-weight: bold;
-      font-size: 1rem;
-  }
-}
-.card_image {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-}
-.swiper {
-  width: 70vw;
-}
-</style>
 </body>
 </html>
