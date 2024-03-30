@@ -14,7 +14,7 @@ services:
     runtime: docker
     dockerContext: .
     dockerfilePath: ./docker/nginx/Dockerfile
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
       - key: BACKEND_HOST
         fromService:
@@ -40,7 +40,7 @@ services:
       - key: SERVICE_DOMAIN
         fromService:
           type: web
-          name: candfans-analyze
+          name: candfans-analyzer
           property: host
       - key: DATABASE_URL
         fromDatabase:
@@ -70,7 +70,7 @@ services:
       - key: SERVICE_DOMAIN
         fromService:
           type: web
-          name: candfans-analyze
+          name: candfans-analyzer
           property: host
       - key: DATABASE_URL
         fromDatabase:

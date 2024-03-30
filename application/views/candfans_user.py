@@ -19,6 +19,8 @@ class CandfansRequestView(View):
         context = {
             'user_code': user_code,
         }
+        # create_history
+        await analyzer_sv.create_search_history(user_code=user_code)
         candfans_user = await analyzer_sv.get_candfans_user_by_user_code(user_code)
         is_new_user = False
         if not candfans_user:

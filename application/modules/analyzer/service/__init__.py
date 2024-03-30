@@ -17,6 +17,7 @@ from .candfans_post import (
     update_or_create_candfans_post,
     get_monthly_post_stats,
 )
+from .search_history import create_search_history
 
 __all__ = [
     # user
@@ -35,4 +36,6 @@ __all__ = [
     # post
     'get_monthly_post_stats',
     'update_or_create_candfans_post',
+    # sh
+    'create_search_history',
 ]

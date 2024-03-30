@@ -100,15 +100,15 @@ def _is_free(post: Post) -> bool:
     return False
 
 
-def _create_post_type_stats(monthly_aggregated_posts: dict[str, list[Post]]):
+def _create_post_type_stats(aggregated_posts: dict[str, list[Post]]):
     return Stat(
-        labels=monthly_aggregated_posts.keys(),
+        labels=aggregated_posts.keys(),
         datasets=[
             DataSet(
                 label='公開投稿',
                 data=[
                     len([p for p in posts if p.post_type == PostType.PUBLIC_ITEM.value])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
             DataSet(
@@ -121,7 +121,7 @@ def _create_post_type_stats(monthly_aggregated_posts: dict[str, list[Post]]):
                             ]
                         ]
                     )
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
             DataSet(
@@ -134,73 +134,73 @@ def _create_post_type_stats(monthly_aggregated_posts: dict[str, list[Post]]):
                             ]
                         ]
                     )
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
         ],
     )
 
 
-def _create_content_type_stats(monthly_aggregated_posts: dict[str, list[Post]]):
+def _create_content_type_stats(aggregated_posts: dict[str, list[Post]]):
     return Stat(
-        labels=monthly_aggregated_posts.keys(),
+        labels=aggregated_posts.keys(),
         datasets=[
             DataSet(
                 label='動画',
                 data=[
                     len([p for p in posts if p.contents_type == 2])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
             DataSet(
                 label='写真',
                 data=[
                     len([p for p in posts if p.contents_type == 1])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
         ],
     )
 
 
-def _create_movie_stats(monthly_aggregated_posts: dict[str, list[Post]]):
+def _create_movie_stats(aggregated_posts: dict[str, list[Post]]):
     return Stat(
-        labels=monthly_aggregated_posts.keys(),
+        labels=aggregated_posts.keys(),
         datasets=[
             DataSet(
                 label='無料動画時間(分)',
                 data=[
                     sum([p.movie_time / 60 for p in posts if p.contents_type == 2 and _is_free(p)])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
             DataSet(
                 label='有料動画時間(分)',
                 data=[
                     sum([p.movie_time / 60 for p in posts if p.contents_type == 2 and not _is_free(p)])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
         ]
     )
 
 
-def _create_photo_stats(monthly_aggregated_posts: dict[str, list[Post]]):
+def _create_photo_stats(aggregated_posts: dict[str, list[Post]]):
     return Stat(
-        labels=monthly_aggregated_posts.keys(),
+        labels=aggregated_posts.keys(),
         datasets=[
             DataSet(
                 label='無料写真枚数',
                 data=[
                     sum([p.image_count for p in posts if p.contents_type == 1 and _is_free(p)])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
             DataSet(
                 label='有料写真枚数',
                 data=[
                     sum([p.image_count for p in posts if p.contents_type == 1 and not _is_free(p)])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
         ]
@@ -208,11 +208,11 @@ def _create_photo_stats(monthly_aggregated_posts: dict[str, list[Post]]):
 
 
 def _create_limited_item_stats(
-    monthly_aggregated_posts: dict[str, list[Post]]
+    aggregated_posts: dict[str, list[Post]]
 ):
 
     return Stat(
-        labels=monthly_aggregated_posts.keys(),
+        labels=aggregated_posts.keys(),
         datasets=[
             DataSet(
                 label='無料プラン',
@@ -224,7 +224,7 @@ def _create_limited_item_stats(
                         ]
                         and _is_free(p)
                     ])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
             DataSet(
@@ -237,7 +237,7 @@ def _create_limited_item_stats(
                         ]
                         and not _is_free(p)
                     ])
-                    for posts in monthly_aggregated_posts.values()
+                    for posts in aggregated_posts.values()
                 ]
             ),
         ],
