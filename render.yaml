@@ -8,7 +8,7 @@ databases:
 
 services:
   - type: web
-    name: candfans-analyze
+    name: candfans-analyzer
     region: singapore
     plan: starter
     runtime: docker
@@ -18,16 +18,16 @@ services:
       - key: BACKEND_HOST
         fromService:
           type: pserv
-          name: candfans-analyzer-web
+          name: candfans-analyzer-backend
           property: host
       - key: BACKEND_PORT
         fromService:
           type: pserv
-          name: candfans-analyzer-web
+          name: candfans-analyzer-backend
           property: port
 
   - type: pserv
-    name: candfans-analyzer-web
+    name: candfans-analyzer-backend
     region: singapore
     plan: starter
     runtime: docker
@@ -104,4 +104,7 @@ envVarGroups:
         generateValue: true
       - key: REDIS_DB
         value: 0
+      - key: SYNC_EXPIRED_DAYS
+        value: 1
+
 
