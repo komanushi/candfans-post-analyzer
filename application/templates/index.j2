@@ -13,7 +13,7 @@
 <div class="jumbo box">
   <div class="_width75">
   <img
-    class="_width50"
+    class="_width50 logo_top"
     src="{% static 'images/logo_main.png' %}
   ">
   </div>
@@ -32,11 +32,18 @@ body {
 .box {
   width: 100vw;
   height: 100vh;
+
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   background-color: #669cff;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.logo_top {
+    max-width: 300px;
+    height: auto;
 }
 </style>
 </body>
