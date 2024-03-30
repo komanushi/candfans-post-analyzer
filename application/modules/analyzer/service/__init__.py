@@ -5,7 +5,8 @@ from .candfans_user import (
     update_user_code,
     set_sync_status,
     get_candfans_user_by_user_id,
-    get_candfans_user_by_user_code
+    get_candfans_user_by_user_code,
+    get_recently_synced_candfans_user_list_order_by_last_synced_at
 )
 from .candfans_plan import (
     create_candfans_plan,
@@ -26,6 +27,7 @@ __all__ = [
     'set_sync_status',
     'get_candfans_user_by_user_id',
     'get_candfans_user_by_user_code',
+    'get_recently_synced_candfans_user_list_order_by_last_synced_at',
     # plan
     'create_candfans_plan',
     'get_candfans_plan_summaries_by_user',

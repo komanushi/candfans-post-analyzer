@@ -1,3 +1,4 @@
+import random
 from typing import Optional
 
 from django.utils import timezone
@@ -71,3 +72,14 @@ async def get_candfans_user_by_user_id(user_id: int) -> Optional[CandfansUserMod
     if not candfans_user:
         return None
     return converter.convert_to_candfans_user_model(candfans_user)
+
+
+async def get_recently_synced_candfans_user_list_order_by_last_synced_at(limit: int) -> list[CandfansUserModel]:
+    candfans_user_list = await CandfansUser.get_list_order_by_last_synced_at_desc(
+        limit=limit + 1
+    )
+    candidates = [converter.convert_to_candfans_user_model(u)for u in candfans_user_list]
+    komachi = await get_candfans_user_by_user_code('koma_showcase')
+    candidates = list(set(candidates + [komachi]))
+    random.shuffle(candidates)
+    return candidates[:limit]

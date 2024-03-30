@@ -6,7 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
 	<link rel="stylesheet" type="text/css" href="https://rawgit.com/outboxcraft/beauter/master/beauter.min.css"/>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+  />
 
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <title>CandfansAnalyzer</title>
 </head>
 <body>
@@ -19,11 +24,51 @@
   </div>
   <form action="{% url 'index' %}" method="POST" style="width: 90%">
     {% csrf_token %}
-    <input type="text" name="user_code" placeholder="user_code" style="width: 60%;max-width: 500px;">
-    <button type="submit" class="_primary">分析</button>
+    <input
+      type="text" name="user_code" placeholder="user_code" style="width: 60%;max-width: 500px;"
+    />
+    <div>
+      <button type="submit" class="_primary">分析</button>
+    </div>
   </form>
+  <div class="swiper history">
+    <div class="swiper-wrapper">
+      {% for user in user_list %}
+      <div class="card _round swiper-slide">
+      <a href="{% url 'candfans_user_request' user_code=user.user_code%}">
+        <img
+          class="_blur _round card_image"
+          src="https://image.candfans.jp{{ user.detail.profile_img }}
+        ">
+        <div class="-content ">
+            {{ user.username }}
+        </div>
+      </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 <script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
+<script>
+  const swiper = new Swiper('.swiper', {
+    slidesPerView: 3,
+    loop: true,
+    // Navigation arrows
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    mousewheel: {
+      forceToAxis: true,
+    },
+    breakpoints: {
+      720: {
+        slidesPerView: 5,
+      },
+    },
+  });
+</script>
 <style>
 body {
   width: 100vw;
@@ -44,6 +89,29 @@ body {
 .logo_top {
     max-width: 300px;
     height: auto;
+}
+.history {
+    display: flex;
+    flex-direction: row;
+}
+.card {
+  padding-top: 5px;
+  width: 80px;
+  background-color: #c4dce8;
+  a {
+      text-decoration: none;
+      color: #333333;
+      font-weight: bold;
+      font-size: 1rem;
+  }
+}
+.card_image {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+}
+.swiper {
+  width: 70vw;
 }
 </style>
 </body>

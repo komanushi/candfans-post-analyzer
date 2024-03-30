@@ -87,6 +87,9 @@ class CandfansUserModel(BaseModel):
     last_synced_at: Optional[datetime.datetime] = None
     detail: Optional[CandfansUserDetailModel] = None
 
+    def __hash__(self) -> int:
+        return self.user_id.__hash__()
+
     @property
     def is_expire(self) -> bool:
         if self.last_synced_at is None:
