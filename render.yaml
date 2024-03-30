@@ -14,6 +14,7 @@ services:
     runtime: docker
     dockerContext: .
     dockerfilePath: ./docker/nginx/Dockerfile
+    healthCheckPath: /
     envVars:
       - key: BACKEND_HOST
         fromService:
@@ -106,5 +107,3 @@ envVarGroups:
         value: 0
       - key: SYNC_EXPIRED_DAYS
         value: 1
-
-
