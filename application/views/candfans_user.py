@@ -39,6 +39,8 @@ class CandfansRequestView(View):
             await analyzer_sv.set_sync_status(candfans_user, status=SyncStatus.SYNCING)
             django_rq.enqueue(users_case.sync_user_stats, candfans_user.user_id)
 
+        # SyncStatusの最新化
+        candfans_user = await analyzer_sv.get_candfans_user_by_user_id(candfans_user.user_id)
         if candfans_user:
             context['candfans_user'] = candfans_user
             user_stats = await stats_case.generate_stats(candfans_user)
