@@ -12,10 +12,15 @@
   <script>
     const summaryMonthlyStats = JSON.parse('{{ summary_monthly_stats_json | escapejs }}');
   </script>
+  <style>
+    ._brandcolor {
+        background-color: #669cff !important;
+    }
+  </style>
 </head>
 <body>
 
-<ul class="topnav _info" id="topNav">
+<ul class="topnav _brandcolor" id="topNav">
   <li>
     <a href="{% url 'index' %}" style="width: 120px;">
       <img

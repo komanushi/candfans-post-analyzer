@@ -3,11 +3,12 @@ import enum
 from typing import Optional
 
 from candfans_client.models.user import QueriedUser, Plan
+from django.conf import settings
 from django.utils import timezone
 from pydantic import BaseModel, conint
 
 
-EXPIRED_DAYS = 2
+EXPIRED_DAYS = settings.SYNC_EXPIRED_DAYS
 SYNC_MUST_BE_FINISH_HOUR = 1
 
 
@@ -96,7 +97,6 @@ class CandfansUserModel(BaseModel):
 
     @property
     def is_necessary_to_refresh(self) -> bool:
-        return True
         if self.sync_status is None:
             return True
         # 同期が1時間終わらないのはおかしい

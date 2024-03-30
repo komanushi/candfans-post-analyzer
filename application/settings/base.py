@@ -148,3 +148,5 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SHELL_PLUS = 'ipython'
+
+SYNC_EXPIRED_DAYS = int(os.environ.get('SYNC_EXPIRED_DAYS', 1))

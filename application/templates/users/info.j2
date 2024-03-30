@@ -1,16 +1,20 @@
   <table class="_width100">
     <tbody>
       <tr>
-        <td>ユーザーID</td>
-        <td>{{ candfans_user.user_id }}</td>
-      </tr>
-      <tr>
         <td>ユーザーコード</td>
-        <td>{{ candfans_user.user_code }}</td>
+        <td>
+          <a href="https://candfans.jp/{{ candfans_user.user_code }}" target="_blank">
+            {{ candfans_user.user_code }}
+          </a>
+        </td>
       </tr>
       <tr>
         <td>ユーザーネーム</td>
-        <td>{{ candfans_user.username }}</td>
+        <td>
+          <a href="https://candfans.jp/{{ candfans_user.user_code }}" target="_blank">
+            {{ candfans_user.username }}
+          </a>
+        </td>
       </tr>
       <tr>
         <td>同期済投稿数</td>
@@ -37,26 +41,12 @@
         {% endif %}
       </tr>
       <tr>
-        <td>最終同期時刻</td>
-        <td>{{ candfans_user.last_synced_at }}</td>
-      </tr>
-      <tr>
         <td>最終同期開始時刻</td>
         <td>{{ candfans_user.sync_requested_at }}</td>
       </tr>
+      <tr>
+        <td>最終同期完了時刻</td>
+        <td>{{ candfans_user.last_synced_at }}</td>
+      </tr>
     </tbody>
   </table>
-  <form class="_alignCenter" method="POST" action="{% url 'candfans_user_refresh' user_code %}">
-    {% csrf_token %}
-      <button
-        type="submit"
-        {% if not candfans_user.is_necessary_to_refresh %}
-          disabled
-          class="tooltip -tooltip-bottom _disabled"
-        {% endif %}
-      >更新
-      <span class="tooltiptext">
-        更新は1日1回です
-      </span>
-      </button>
-  </form>

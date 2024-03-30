@@ -1,6 +1,4 @@
-from django.conf import settings
-from django.urls import path, include
-from django.conf.urls.static import static
+from django.urls import path
 
 from .views import candfans_user, index
 
@@ -14,10 +12,6 @@ urlpatterns = [
     path(
         'user/<str:user_code>', candfans_user.CandfansRequestView.as_view(),
         name='candfans_user_request',
-    ),
-    path(
-        'user/<str:user_code>/refresh', candfans_user.CandfansRefreshView.as_view(),
-        name='candfans_user_refresh',
     ),
     path(
         'user/<str:user_code>/not_found', candfans_user.CandidatesUserNotFoundView.as_view(),

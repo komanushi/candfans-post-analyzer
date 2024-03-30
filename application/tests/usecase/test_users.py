@@ -69,7 +69,7 @@ class UserUseCaseTest(TestCase):
         user_model, plans = await users_case.create_new_candfans_user(new_user_code)
         self.assertEqual(user_model.user_id, user_info.user.id)
         self.assertEqual(user_model.user_code, new_user_code)
-        self.assertNotEqual(user_model.detail_id, before_detail.id)
+        self.assertNotEqual(user_model.detail.id, before_detail.id)
         self.assertEqual(user_model.detail.user_code, new_user_code)
 
     @patch('modules.candfans_gateway.service.get_timelines')
