@@ -16,6 +16,7 @@ from usecase import (
 class CandfansRequestView(View):
 
     async def get(self, request, user_code: str, *args, **kwargs):
+        user_code = user_code.split('#')[0]
         context = {
             'user_code': user_code,
         }
