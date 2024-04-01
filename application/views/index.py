@@ -8,7 +8,6 @@ class IndexView(View):
     async def get(self, request):
         # レコメンド
         user_list = await analyzer_sv.get_recently_synced_candfans_user_list_order_by_last_synced_at(10)
-
         return render(
             request,
             'index.j2',

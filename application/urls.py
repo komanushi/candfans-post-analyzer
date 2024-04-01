@@ -1,6 +1,6 @@
 from django.urls import path
-
 from .views import candfans_user, index
+
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
