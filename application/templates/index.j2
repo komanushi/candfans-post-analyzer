@@ -55,7 +55,7 @@
     object-fit: cover;
   }
   .swiper {
-    width: 70vw;
+    width: 80vw;
     max-width: 600px;
   }
   .footer {
@@ -116,11 +116,11 @@
 <script>
   const swiper = new Swiper('.swiper', {
     slidesPerView: 3,
+    spaceBetween: 10,
     loop: true,
-    // Navigation arrows
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
+    speed: 2000,
+    autoplay: {
+        delay: 1000,
     },
     mousewheel: {
       forceToAxis: true,
