@@ -170,14 +170,22 @@ def _create_movie_stats(aggregated_posts: dict[str, list[Post]]):
             DataSet(
                 label='無料動画時間(分)',
                 data=[
-                    sum([p.movie_time / 60 for p in posts if p.contents_type == 2 and _is_free(p)])
+                    sum([p.movie_time / 60 for p in posts if (
+                        p.contents_type == 2
+                        and _is_free(p)
+                        and p.post_type != PostType.INDIVIDUAL_ITEM
+                    )])
                     for posts in aggregated_posts.values()
                 ]
             ),
             DataSet(
                 label='有料動画時間(分)',
                 data=[
-                    sum([p.movie_time / 60 for p in posts if p.contents_type == 2 and not _is_free(p)])
+                    sum([p.movie_time / 60 for p in posts if (
+                        p.contents_type == 2
+                        and not _is_free(p)
+                        and p.post_type != PostType.INDIVIDUAL_ITEM
+                    )])
                     for posts in aggregated_posts.values()
                 ]
             ),
@@ -192,14 +200,22 @@ def _create_photo_stats(aggregated_posts: dict[str, list[Post]]):
             DataSet(
                 label='無料写真枚数',
                 data=[
-                    sum([p.image_count for p in posts if p.contents_type == 1 and _is_free(p)])
+                    sum([p.image_count for p in posts if (
+                        p.contents_type == 1
+                        and _is_free(p)
+                        and p.post_type != PostType.INDIVIDUAL_ITEM
+                    )])
                     for posts in aggregated_posts.values()
                 ]
             ),
             DataSet(
                 label='有料写真枚数',
                 data=[
-                    sum([p.image_count for p in posts if p.contents_type == 1 and not _is_free(p)])
+                    sum([p.image_count for p in posts if (
+                        p.contents_type == 1
+                        and not _is_free(p)
+                        and p.post_type != PostType.INDIVIDUAL_ITEM
+                    )])
                     for posts in aggregated_posts.values()
                 ]
             ),
