@@ -14,7 +14,7 @@ class Command(BaseCommand):
         asyncio.run(self._main())
 
     async def _main(self, *args):
-        target_users = await analyzer_sv.get_candfans_user_list_order_by_last_synced_at_asc(100)
+        target_users = await analyzer_sv.get_candfans_user_list_order_by_last_synced_at_asc(20)
         for user in target_users:
             print(f'request resync user: {user.user_id=} {user.user_code=} {user.username=}')
             django_rq.enqueue(sync_user_stats, user.user_id)
