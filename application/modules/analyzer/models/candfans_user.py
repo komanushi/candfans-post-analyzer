@@ -67,3 +67,13 @@ class CandfansUser(models.Model):
         async for user in query:
             user_list.append(user)
         return user_list
+
+    @classmethod
+    async def get_list_order_by_last_synced_at_asc(cls, limit: int) -> list['CandfansUser']:
+        user_list = []
+        query = (
+            cls.objects.all().select_related('detail').order_by('last_synced_at')[:limit]
+        )
+        async for user in query:
+            user_list.append(user)
+        return user_list

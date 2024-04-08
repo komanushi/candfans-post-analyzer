@@ -83,3 +83,11 @@ async def get_recently_synced_candfans_user_list_order_by_last_synced_at(limit: 
     candidates = list(set(candidates + [komachi]))
     random.shuffle(candidates)
     return candidates[:limit]
+
+
+async def get_candfans_user_list_order_by_last_synced_at_asc(limit: int) -> list[CandfansUserModel]:
+    candfans_user_list = await CandfansUser.get_list_order_by_last_synced_at_asc(
+        limit=limit + 1
+    )
+    users = [converter.convert_to_candfans_user_model(u)for u in candfans_user_list]
+    return users

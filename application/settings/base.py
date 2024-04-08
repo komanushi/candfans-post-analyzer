@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django_rq',
     # own modules
     'modules.analyzer',
+    'modules.candfans_gateway',
+    'modules.manage',
 ]
 
 MIDDLEWARE = [
