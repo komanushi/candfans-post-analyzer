@@ -112,7 +112,7 @@ def _create_post_type_stats(aggregated_posts: dict[str, list[Post]]):
                 ]
             ),
             DataSet(
-                label='限定投稿',
+                label='プラン限定投稿',
                 data=[
                     len(
                         [

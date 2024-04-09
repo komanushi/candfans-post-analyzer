@@ -95,7 +95,7 @@ services:
     dockerContext: .
     dockerfilePath: ./docker/app/Dockerfile
     dockerCommand: poetry run python ./manage.py resync_users
-    schedule: 13 */4 * * *
+    schedule: 13 */8 * * *
     envVars:
       - fromGroup: django-shared
       - key: SERVICE_DOMAIN
