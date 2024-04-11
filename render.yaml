@@ -10,7 +10,7 @@ services:
   - type: web
     name: candfans-analyzer
     region: singapore
-    plan: starter
+    plan: free
     runtime: docker
     dockerContext: .
     dockerfilePath: ./docker/nginx/Dockerfile
