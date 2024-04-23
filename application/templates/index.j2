@@ -33,6 +33,12 @@
   .logo_top {
       max-width: 300px;
       height: auto;
+      margin-bottom: 10px;
+  }
+  .candfans_url {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
   }
   .history {
       display: flex;
@@ -82,9 +88,10 @@
   </div>
   <form action="{% url 'index' %}" method="POST" style="width: 90%">
     {% csrf_token %}
+    <span class="candfans_url">https://candfans.jp/</span>
     <input
       type="text" name="user_code" placeholder="user_code"
-      style="width: 60%;max-width: 500px;"
+      style="width: 40%;max-width: 200px;"
       class="_shadow"
     />
     <div>
