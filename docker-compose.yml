@@ -28,6 +28,7 @@ services:
       REDIS_HOSTNAME: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
+      SERVICE_DOMAIN: 'nginx:8000'
     links:
       - db
       - redis
@@ -37,7 +38,24 @@ services:
       context: .
       dockerfile: ./docker/app/Dockerfile
     entrypoint: '/app/docker/app/entrypoint.dev.sh'
-    command: poetry run watchmedo auto-restart -d ./application -R -p '*.py' --interval 3.0 -- poetry run python ./manage.py rqworker default
+    command: poetry run watchmedo auto-restart -d ./application -R -p '*.py' --interval 3.0 -- poetry run python ./manage.py rqworker default -- --with-scheduler
+    working_dir: /app
+    volumes:
+      - ./docker/app/.bashrc:/root/.bashrc:ro
+      - .:/app:cached
+      - local_django:/app/local/django:cached
+    environment:
+      <<: *django_environment
+    links:
+      - db
+      - redis
+
+  rq_scheduler:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    entrypoint: '/app/docker/app/entrypoint.dev.sh'
+    command: poetry run watchmedo auto-restart -d ./application -R -p '*.py' --interval 3.0 -- poetry run python ./manage.py rqscheduler default
     working_dir: /app
     volumes:
       - ./docker/app/.bashrc:/root/.bashrc:ro

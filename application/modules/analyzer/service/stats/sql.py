@@ -5,13 +5,7 @@ import psycopg
 from django.db import connection
 
 
-def namedtuple_fetchall(cursor):
-    desc = cursor.description
-    nt_result = namedtuple('Result', [col[0] for col in desc])
-    return [nt_result(*row) for row in cursor.fetchall()]
-
-
-async def get_query_result(query: str, params: list = None) -> list:
+async def get_query_result(query: str, params: list = None) -> list[namedtuple]:
     aconnection = await psycopg.AsyncConnection.connect(
         **{
             **connection.get_connection_params(),
