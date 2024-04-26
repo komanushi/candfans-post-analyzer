@@ -1,10 +1,13 @@
 import hashlib
-import os
+
 import json
 import asyncio
 import datetime
 
 import django_rq
+
+from rq_scheduler import Scheduler
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
@@ -16,10 +19,14 @@ TARGET_JOBS = [
         'func': management_sv.ping_domain,
         'args': (settings.SERVICE_HOST,),
         'kwargs': {},
-        'interval': 60 * 12,
+        'interval': 10,
         'result_ttl': 10,
     }
 ]
+
+rq_scheduler = Scheduler(
+    connection=django_rq.get_connection(), queue_name="default", interval=5
+)
 
 
 def generate_job_id(job_definition: dict) -> str:
@@ -30,8 +37,9 @@ def generate_job_id(job_definition: dict) -> str:
 
 
 def schedule(kwargs):
-    scheduler = django_rq.get_scheduler('default')
-    scheduler.schedule(scheduled_time=datetime.datetime.utcnow(), id=generate_job_id(kwargs), **kwargs)
+    rq_scheduler.schedule(
+        scheduled_time=datetime.datetime.now(), id=generate_job_id(kwargs), **kwargs
+    )
 
 
 class Command(BaseCommand):
@@ -41,7 +49,7 @@ class Command(BaseCommand):
         asyncio.run(self._main())
 
     async def _main(self, *args):
-        scheduler = django_rq.get_scheduler('default')
+        scheduler = rq_scheduler
         registered_jobs = {job.id: job for job in scheduler.get_jobs()}
         defined_jobs = {generate_job_id(job): job for job in TARGET_JOBS}
         jobs_to_cleanup_ids = set(registered_jobs.keys()) - set(defined_jobs.keys())
