@@ -57,6 +57,11 @@ async def get_monthly_post_stats(user: CandfansUserModel) -> MonthlyStats:
         post_rel_map[rel.candfans_post_id].append(plan_id_map.get(int(rel.candfans_plan_id)))
     posts = [convert_from_candfans_post_to_post(p, post_rel_map.get(p.post_id, [])) for p in posts]
     monthly_aggregated = _aggregate_monthly(posts)
+
+
+
+
+
     return MonthlyStats(
         total_post_type_stats=PostTypeStat(
             public_item=len([p for p in posts if p.post_type == PostType.PUBLIC_ITEM.value]),
