@@ -16,8 +16,8 @@ from .candfans_plan import (
 )
 from .candfans_post import (
     update_or_create_candfans_post,
-    get_monthly_post_stats,
 )
+from .candfans_post_stats import get_monthly_post_stats
 from .search_history import create_search_history
 
 __all__ = [
@@ -36,8 +36,9 @@ __all__ = [
     'get_candfans_plan_summaries_by_user',
     'sync_candfans_plan',
     # post
-    'get_monthly_post_stats',
     'update_or_create_candfans_post',
+    # post_stats
+    'get_monthly_post_stats',
     # sh
     'create_search_history',
 ]

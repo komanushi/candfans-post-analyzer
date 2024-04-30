@@ -3,7 +3,7 @@ from django.test import TestCase
 from candfans_client.models.timeline import PostType
 
 from modules.analyzer.domain_models import PostTypeStat, DataSet
-from modules.analyzer.service import candfans_post as candfans_post_sv
+from modules.analyzer.service import candfans_post_stats as candfans_post_stats_sv
 from tests.factories.models.candfans_user import CandfansUserFactory
 from tests.factories.models.candfans_plan import CandfansPlanFactory
 from tests.factories.models.candfans_post import CandfansPostFactory
@@ -22,7 +22,7 @@ class CandfansPostServiceTest(TestCase):
             PostFactory.create(month='2024-03'),
             PostFactory.create(month='2024-03'),
         ]
-        aggregated = candfans_post_sv._aggregate_monthly(posts)
+        aggregated = candfans_post_stats_sv._aggregate_monthly(posts)
         self.assertEqual(len(aggregated.keys()), 3)
         self.assertEqual(sum([len(x) for x in aggregated.values()]), len(posts))
 
@@ -34,7 +34,7 @@ class CandfansPostServiceTest(TestCase):
             PostFactory.create(month='2024-03'),
             PostFactory.create(month='2024-03'),
         ]
-        aggregated = candfans_post_sv._aggregate_monthly(posts)
+        aggregated = candfans_post_stats_sv._aggregate_monthly(posts)
         self.assertEqual(len(aggregated.keys()), 3)
         self.assertEqual(sum([len(x) for x in aggregated.values()]), len(posts))
 
@@ -64,7 +64,7 @@ class CandfansPostServiceTest(TestCase):
             else:
                 await CandFansPostPlanRelationFactory.create(candfans_post=post, candfans_plan=non_free)
 
-        stats = await candfans_post_sv.get_monthly_post_stats(user)
+        stats = await candfans_post_stats_sv.get_monthly_post_stats(user)
         self.assertEqual(
             stats.total_post_type_stats,
             PostTypeStat(
