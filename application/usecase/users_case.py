@@ -49,9 +49,9 @@ async def sync_user_stats(user_id: int):
     candfans_user = await analyzer_sv.get_candfans_user_by_user_id(user_id)
     print(f'target user_code={candfans_user.user_code}')
 
-    if not candfans_user.is_necessary_to_refresh:
-        print(f'SKIP {candfans_user.is_necessary_to_refresh=}')
-        return
+    # if not candfans_user.is_necessary_to_refresh:
+    #     print(f'SKIP {candfans_user.is_necessary_to_refresh=}')
+    #     return
 
     await resync_candfans_plan(candfans_user.user_code)
     timeline_map = await cg_sv.get_timelines(user_id=user_id)
