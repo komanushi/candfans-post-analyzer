@@ -4,9 +4,14 @@ from typing import TypeVar, Callable
 import psycopg
 
 from django.db import connection
-
+from pydantic import BaseModel
 
 T = TypeVar('T')
+
+
+class QueryModel(BaseModel):
+    query: str
+    row_to_model: Callable[[namedtuple], T]
 
 
 async def get_query_result(query: str, params: list = None) -> list[namedtuple]:
@@ -31,10 +36,6 @@ async def get_query_result(query: str, params: list = None) -> list[namedtuple]:
             return results
 
 
-async def get_query_result_via_model(
-    query: str,
-    model_factory: Callable[[namedtuple], T],
-    params: list = None,
-) -> list[T]:
-    results = await get_query_result(query, params)
-    return [model_factory(row) for row in results]
+async def get_query_results_via_model(sql_model: QueryModel, params: list) -> list[T]:
+    results = await get_query_result(sql_model.query, params)
+    return [sql_model.row_to_model(row) for row in results]

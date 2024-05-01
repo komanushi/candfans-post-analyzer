@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TransactionTestCase
 
 from candfans_client.models.timeline import PostType
 
@@ -11,7 +11,7 @@ from tests.factories.models.candfans_post_plan_relation import CandFansPostPlanR
 from tests.factories.domain_models.candfans_gateway import PostFactory
 
 
-class CandfansPostServiceTest(TestCase):
+class CandfansPostServiceTest(TransactionTestCase):
 
     async def test__aggregate_monthly(self):
         posts = [

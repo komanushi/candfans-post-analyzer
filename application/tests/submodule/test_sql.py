@@ -31,10 +31,13 @@ class SqlHelperTest(TransactionTestCase):
             month: str
 
         post_type_factory = lambda x: PostType(post_id=x.post_id, month=x.month)
-        result = await sql.get_query_result_via_model(
-            f'select post_id, month from analyzer_candfanspost where user_id = %s',
-            post_type_factory,
-            [user.user_id]
+        result = await sql.get_query_results_via_model(
+            sql.QueryModel(
+                query='select post_id, month from analyzer_candfanspost where user_id = %s',
+                row_to_model=post_type_factory,
+            ),
+            params=[user.user_id]
         )
+
         self.assertEqual(len(result), 2)
         self.assertTrue(isinstance(result[0], PostType))

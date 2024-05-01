@@ -6,13 +6,17 @@ from modules.analyzer.domain_models import (
     CandfansUserModel,
     Stat,
     MonthlyStats,
-    DataSet, PostTypeStat,
+    DataSet,
 )
 from modules.analyzer.service.candfans_plan import get_candfans_plans_by_user
 from modules.analyzer.models import CandfansPost, CandFansPostPlanRelation
 from modules.analyzer.converter import (
     convert_from_candfans_post_to_post
 )
+
+from submodule.sql import get_query_results_via_model, get_query_result
+
+from .sql_and_models.total_post_type_stats import TotalPostTypeStatsQuery
 
 
 async def get_monthly_post_stats(user: CandfansUserModel) -> MonthlyStats:
@@ -26,14 +30,13 @@ async def get_monthly_post_stats(user: CandfansUserModel) -> MonthlyStats:
     posts = [convert_from_candfans_post_to_post(p, post_rel_map.get(p.post_id, [])) for p in posts]
     monthly_aggregated = _aggregate_monthly(posts)
 
+    total_post_type_stats = await get_query_results_via_model(
+        TotalPostTypeStatsQuery,
+        params=[user.user_id]
+    )
 
     return MonthlyStats(
-        total_post_type_stats=PostTypeStat(
-            public_item=len([p for p in posts if p.post_type == PostType.PUBLIC_ITEM.value]),
-            limited_access_item=len([p for p in posts if p.post_type == PostType.LIMITED_ACCESS_ITEM.value]),
-            individual_item=len([p for p in posts if p.post_type == PostType.INDIVIDUAL_ITEM.value]),
-            back_number_item=len([p for p in posts if p.post_type == PostType.BACK_NUMBER_ITEM.value]),
-        ),
+        total_post_type_stats=total_post_type_stats[0],
         monthly_post_type_stats=_create_post_type_stats(monthly_aggregated),
         monthly_content_type_stats=_create_content_type_stats(monthly_aggregated),
         monthly_limited_item_stats=_create_limited_item_stats(monthly_aggregated),
