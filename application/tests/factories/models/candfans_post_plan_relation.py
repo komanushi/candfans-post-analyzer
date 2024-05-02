@@ -15,6 +15,7 @@ class CandFansPostPlanRelationFactory(AsyncMixin, factory.django.DjangoModelFact
 
     candfans_plan = factory.SubFactory(CandfansPlanFactory)
     candfans_post = factory.SubFactory(CandfansPostFactory)
+    backnumber_id = None
 
     updated_at = timezone.now()
     created_at = timezone.now()

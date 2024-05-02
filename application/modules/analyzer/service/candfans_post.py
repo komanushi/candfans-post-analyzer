@@ -28,7 +28,8 @@ async def update_or_create_candfans_post(
         for plan in post.plans:
             rels.append(CandFansPostPlanRelation(
                 candfans_plan=related_plan_map[plan.plan_id],
-                candfans_post=new_post_map[post.post_id]
+                candfans_post=new_post_map[post.post_id],
+                backnumber_id=plan.backnumber_id
             ))
     await CandFansPostPlanRelation.bulk_create(rels)
 

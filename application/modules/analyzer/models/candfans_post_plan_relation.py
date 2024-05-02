@@ -7,6 +7,7 @@ from .candfans_plan import CandfansPlan
 class CandFansPostPlanRelation(models.Model):
     candfans_plan = models.ForeignKey('CandfansPlan', on_delete=models.CASCADE, related_name='candfans_plan_rel')
     candfans_post = models.ForeignKey('CandfansPost', on_delete=models.CASCADE, related_name='candfans_post_rel')
+    backnumber_id = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -34,7 +35,7 @@ class CandFansPostPlanRelation(models.Model):
             rels,
             unique_fields=['candfans_plan', 'candfans_post'],
             update_conflicts=True,
-            update_fields=['updated_at']
+            update_fields=['updated_at', 'backnumber_id'],
         )
 
     @classmethod
