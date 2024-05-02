@@ -9,6 +9,7 @@
   <title>{{ candfans_user.user_code }}さんの情報</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{% static 'js/graph.js' %}"></script>
   <script>
     const summaryMonthlyStats = JSON.parse('{{ summary_monthly_stats_json | escapejs }}');
   </script>
