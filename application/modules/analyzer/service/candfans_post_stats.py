@@ -2,10 +2,11 @@ from collections import defaultdict
 from datetime import timedelta, datetime
 from candfans_client.models.timeline import Post, PostType
 
-from modules.analyzer.domain_models import (
+from ..domain_models import (
     CandfansUserModel,
     Stat,
     MonthlyStats,
+    MonthlyPostStats,
     DataSet,
 )
 from modules.analyzer.service.candfans_plan import get_candfans_plans_by_user
@@ -14,220 +15,92 @@ from modules.analyzer.converter import (
     convert_from_candfans_post_to_post
 )
 
-from submodule.sql import get_query_results_via_model, get_query_result
+from submodule.sql import get_query_results_via_model
 
 from .sql_and_models.total_post_type_stats import TotalPostTypeStatsQuery
+from .sql_and_models.monthly_stats import MonthlyStatsQuery
 
 
 async def get_monthly_post_stats(user: CandfansUserModel) -> MonthlyStats:
-    posts = await CandfansPost.get_list_by_user_id(user_id=user.user_id)
-    plans = await get_candfans_plans_by_user(user=user)
-    plan_id_map = {p.plan_id: p for p in plans}
-    rels = await CandFansPostPlanRelation.get_list_by_post_ids(candfans_post_ids=[p.post_id for p in posts])
-    post_rel_map = defaultdict(list)
-    for rel in rels:
-        post_rel_map[rel.candfans_post_id].append(plan_id_map.get(int(rel.candfans_plan_id)))
-    posts = [convert_from_candfans_post_to_post(p, post_rel_map.get(p.post_id, [])) for p in posts]
-    monthly_aggregated = _aggregate_monthly(posts)
-
     total_post_type_stats = await get_query_results_via_model(
         TotalPostTypeStatsQuery,
         params=[user.user_id]
     )
-
+    monthly_post_stats_list: list[MonthlyPostStats] = await get_query_results_via_model(
+        MonthlyStatsQuery,
+        params=[user.user_id, user.user_id]
+    )
+    label = [s.month for s in monthly_post_stats_list]
     return MonthlyStats(
         total_post_type_stats=total_post_type_stats[0],
-        monthly_post_type_stats=_create_post_type_stats(monthly_aggregated),
-        monthly_content_type_stats=_create_content_type_stats(monthly_aggregated),
-        monthly_limited_item_stats=_create_limited_item_stats(monthly_aggregated),
-        movie_stats=_create_movie_stats(monthly_aggregated),
-        photo_stats=_create_photo_stats(monthly_aggregated),
+        monthly_post_type_stats=Stat(
+            labels=label,
+            datasets=[
+                DataSet(
+                    label='公開投稿',
+                    data=[s.public_item for s in monthly_post_stats_list]
+                ),
+                DataSet(
+                    label='プラン限定投稿',
+                    data=[s.plan_item for s in monthly_post_stats_list]
+                ),
+                DataSet(
+                    label='単品販売',
+                    data=[s.individual_item for s in monthly_post_stats_list]
+                ),
+            ],
+        ),
+        monthly_content_type_stats=Stat(
+            labels=label,
+            datasets=[
+                DataSet(
+                    label='動画',
+                    data=[s.movie_item for s in monthly_post_stats_list]
+                ),
+                DataSet(
+                    label='写真',
+                    data=[s.photo_item for s in monthly_post_stats_list]
+                ),
+            ]
+        ),
+        monthly_limited_item_stats=Stat(
+            labels=label,
+            datasets=[
+                DataSet(
+                    label='無料プラン',
+                    data=[s.free_plan_item for s in monthly_post_stats_list]
+                ),
+                DataSet(
+                    label='有料プラン',
+                    data=[s.paid_plan_item for s in monthly_post_stats_list]
+                ),
+            ]
+        ),
+        movie_stats=Stat(
+            labels=label,
+            datasets=[
+                DataSet(
+                    label='無料動画時間(分)',
+                    data=[s.free_movie_time for s in monthly_post_stats_list]
+                ),
+                DataSet(
+                    label='有料動画時間(分)',
+                    data=[s.paid_movie_time for s in monthly_post_stats_list]
+                ),
+            ]
+        ),
+        photo_stats=Stat(
+            labels=label,
+            datasets=[
+                DataSet(
+                    label='無料写真枚数',
+                    data=[s.free_photo_count for s in monthly_post_stats_list]
+                ),
+                DataSet(
+                    label='有料写真枚数',
+                    data=[s.paid_photo_count for s in monthly_post_stats_list]
+                ),
+            ]
+        ),
     )
 
-
-def _aggregate_monthly(posts: list[Post]) -> dict[str, list[Post]]:
-    posts = sorted(posts, key=lambda p: p.month)
-    if not posts:
-        return {}
-    # 1ヶ月投稿がない月が発生するとそこがグラフから消えるので範囲内の月を列挙する
-    min_month = datetime.strptime(posts[0].month, '%Y-%m')
-    max_month = datetime.strptime(posts[-1].month, '%Y-%m')
-    months = set()
-    for d in range((max_month - min_month).days):
-        months.add(
-            (min_month + timedelta(days=d+1)).strftime('%Y-%m')
-        )
-    monthly_data = {m: [] for m in sorted(months)}
-    for post in posts:
-        monthly_data[post.month].append(post)
-
-    return monthly_data
-
-
-def _is_free(post: Post) -> bool:
-    plans = post.plans
-    if post.post_type == PostType.PUBLIC_ITEM.value:
-        return True
-    if any([p.support_price == 0 for p in plans]):
-        return True
-    return False
-
-
-def _create_post_type_stats(aggregated_posts: dict[str, list[Post]]):
-    return Stat(
-        labels=aggregated_posts.keys(),
-        datasets=[
-            DataSet(
-                label='公開投稿',
-                data=[
-                    len([p for p in posts if p.post_type == PostType.PUBLIC_ITEM.value])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-            DataSet(
-                label='プラン限定投稿',
-                data=[
-                    len(
-                        [
-                            p for p in posts if p.post_type in [
-                                PostType.LIMITED_ACCESS_ITEM.value, PostType.BACK_NUMBER_ITEM.value
-                            ]
-                        ]
-                    )
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-            DataSet(
-                label='単品販売',
-                data=[
-                    len(
-                        [
-                            p for p in posts if p.post_type in [
-                                PostType.INDIVIDUAL_ITEM.value
-                            ]
-                        ]
-                    )
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-        ],
-    )
-
-
-def _create_content_type_stats(aggregated_posts: dict[str, list[Post]]):
-    return Stat(
-        labels=aggregated_posts.keys(),
-        datasets=[
-            DataSet(
-                label='動画',
-                data=[
-                    len([p for p in posts if p.contents_type == 2])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-            DataSet(
-                label='写真',
-                data=[
-                    len([p for p in posts if p.contents_type == 1])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-        ],
-    )
-
-
-def _create_movie_stats(aggregated_posts: dict[str, list[Post]]):
-    return Stat(
-        labels=aggregated_posts.keys(),
-        datasets=[
-            DataSet(
-                label='無料動画時間(分)',
-                data=[
-                    sum([p.movie_time / 60 for p in posts if (
-                        p.contents_type == 2
-                        and _is_free(p)
-                        and p.post_type != PostType.INDIVIDUAL_ITEM
-                    )])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-            DataSet(
-                label='有料動画時間(分)',
-                data=[
-                    sum([p.movie_time / 60 for p in posts if (
-                        p.contents_type == 2
-                        and not _is_free(p)
-                        and p.post_type != PostType.INDIVIDUAL_ITEM
-                    )])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-        ]
-    )
-
-
-def _create_photo_stats(aggregated_posts: dict[str, list[Post]]):
-    return Stat(
-        labels=aggregated_posts.keys(),
-        datasets=[
-            DataSet(
-                label='無料写真枚数',
-                data=[
-                    sum([p.image_count for p in posts if (
-                        p.contents_type == 1
-                        and _is_free(p)
-                        and p.post_type != PostType.INDIVIDUAL_ITEM
-                    )])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-            DataSet(
-                label='有料写真枚数',
-                data=[
-                    sum([p.image_count for p in posts if (
-                        p.contents_type == 1
-                        and not _is_free(p)
-                        and p.post_type != PostType.INDIVIDUAL_ITEM
-                    )])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-        ]
-    )
-
-
-def _create_limited_item_stats(
-    aggregated_posts: dict[str, list[Post]]
-):
-
-    return Stat(
-        labels=aggregated_posts.keys(),
-        datasets=[
-            DataSet(
-                label='無料プラン',
-                data=[
-                    len([
-                        p for p in posts
-                        if p.post_type in [
-                            PostType.LIMITED_ACCESS_ITEM.value, PostType.BACK_NUMBER_ITEM.value
-                        ]
-                        and _is_free(p)
-                    ])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-            DataSet(
-                label='有料プラン',
-                data=[
-                    len([
-                        p for p in posts
-                        if p.post_type in [
-                            PostType.LIMITED_ACCESS_ITEM.value, PostType.BACK_NUMBER_ITEM.value
-                        ]
-                        and not _is_free(p)
-                    ])
-                    for posts in aggregated_posts.values()
-                ]
-            ),
-        ],
-    )

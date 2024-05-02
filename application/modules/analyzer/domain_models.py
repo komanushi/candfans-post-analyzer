@@ -189,6 +189,29 @@ class Stat(BaseModel):
     datasets: list[DataSet]
 
 
+class MonthlyPostStats(BaseModel):
+    month: str
+    public_item: int
+    plan_item: int
+    individual_item: int
+    photo_item: int
+    movie_item: int
+    free_plan_item: int
+    paid_plan_item: int
+    free_movie_time_sec: float
+    paid_movie_time_sec: float
+    free_photo_count: int
+    paid_photo_count: int
+
+    @property
+    def free_movie_time(self):
+        return self.free_movie_time_sec / 60
+
+    @property
+    def paid_movie_time(self):
+        return self.paid_movie_time_sec / 60
+
+
 class PostTypeStat(BaseModel):
     public_item: int
     limited_access_item: int

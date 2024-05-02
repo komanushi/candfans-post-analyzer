@@ -8,35 +8,10 @@ from tests.factories.models.candfans_user import CandfansUserFactory
 from tests.factories.models.candfans_plan import CandfansPlanFactory
 from tests.factories.models.candfans_post import CandfansPostFactory
 from tests.factories.models.candfans_post_plan_relation import CandFansPostPlanRelationFactory
-from tests.factories.domain_models.candfans_gateway import PostFactory
+
 
 
 class CandfansPostServiceTest(TransactionTestCase):
-
-    async def test__aggregate_monthly(self):
-        posts = [
-            PostFactory.create(month='2024-01'),
-            PostFactory.create(month='2024-02'),
-            PostFactory.create(month='2024-02'),
-            PostFactory.create(month='2024-03'),
-            PostFactory.create(month='2024-03'),
-            PostFactory.create(month='2024-03'),
-        ]
-        aggregated = candfans_post_stats_sv._aggregate_monthly(posts)
-        self.assertEqual(len(aggregated.keys()), 3)
-        self.assertEqual(sum([len(x) for x in aggregated.values()]), len(posts))
-
-    async def test__aggregate_monthly_with_lack(self):
-        # 2024-02が投稿がなかった場合
-        posts = [
-            PostFactory.create(month='2024-01'),
-            PostFactory.create(month='2024-03'),
-            PostFactory.create(month='2024-03'),
-            PostFactory.create(month='2024-03'),
-        ]
-        aggregated = candfans_post_stats_sv._aggregate_monthly(posts)
-        self.assertEqual(len(aggregated.keys()), 3)
-        self.assertEqual(sum([len(x) for x in aggregated.values()]), len(posts))
 
     async def test_get_monthly_post_stats(self):
         user = await CandfansUserFactory.create()
