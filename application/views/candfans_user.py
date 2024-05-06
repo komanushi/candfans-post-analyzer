@@ -49,6 +49,7 @@ class CandfansRequestView(View):
             user_stats = await stats_case.generate_stats(candfans_user)
             context['monthly_stats'] = user_stats.monthly_stats
             context['summary_monthly_stats_json'] = user_stats.summary_monthly_stats_json
+            context['plan_based_stats_json'] = user_stats.plan_based_stats_json
             context['plan_summaries'] = user_stats.plan_summaries
         return render(
             request,

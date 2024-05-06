@@ -16,11 +16,11 @@
     <canvas id="photo_stats"></canvas>
   </div>
   <script>
-    create_graph('monthly_post_type_stats', '月別投稿数')
-    create_graph('monthly_limited_item_stats', '月別プラン価格帯別投稿数')
-    create_graph('monthly_content_type_stats', '月別コンテンツタイプ別投稿数')
-    create_graph('photo_stats', 'プラン内写真投稿分析')
-    create_graph('movie_stats', 'プラン内動画投稿分析')
+    create_graph(summaryMonthlyStats, 'monthly_post_type_stats', '月別投稿数')
+    create_graph(summaryMonthlyStats, 'monthly_limited_item_stats', '月別プラン価格帯別投稿数')
+    create_graph(summaryMonthlyStats, 'monthly_content_type_stats', '月別コンテンツタイプ別投稿数')
+    create_graph(summaryMonthlyStats, 'photo_stats', 'プラン内写真投稿分析')
+    create_graph(summaryMonthlyStats, 'movie_stats', 'プラン内動画投稿分析')
 </script>
 <style>
   .graph-container {

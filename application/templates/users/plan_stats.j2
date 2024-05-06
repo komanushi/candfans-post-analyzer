@@ -1,0 +1,19 @@
+
+  <div class="container graph-container">
+    <canvas id="plan_post_stats"></canvas>
+  </div>
+  <div class="container graph-container">
+    <canvas id="only_paid_plan_post_stats"></canvas>
+  </div>
+
+  <script>
+    create_graph(planBasedStats, 'plan_post_stats', 'プラン別投稿数')
+    create_graph(planBasedStats, 'only_paid_plan_post_stats', '有料プラン別投稿数')
+
+</script>
+<style>
+  .graph-container {
+      height: 300px;
+      max-width: 400px;
+  }
+</style>
