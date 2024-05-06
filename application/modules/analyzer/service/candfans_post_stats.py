@@ -1,24 +1,114 @@
+import itertools
 from collections import defaultdict
-from datetime import timedelta, datetime
-from candfans_client.models.timeline import Post, PostType
+from submodule.sql import get_query_results_via_model
 
 from ..domain_models import (
     CandfansUserModel,
     Stat,
     MonthlyStats,
     MonthlyPostStats,
+    MonthlyPlanStats,
+    PlanStats,
     DataSet,
 )
-from modules.analyzer.service.candfans_plan import get_candfans_plans_by_user
-from modules.analyzer.models import CandfansPost, CandFansPostPlanRelation
-from modules.analyzer.converter import (
-    convert_from_candfans_post_to_post
+from .sql_and_models import (
+    TotalPostTypeStatsQuery,
+    MonthlyStatsQuery,
+    PlanBasedStatsQuery
 )
 
-from submodule.sql import get_query_results_via_model
+CHART_COLORS = {
+  'red': 'rgb(255 99 132)',
+  'green': 'rgb(75 192 192)',
+  'blue': 'rgb(54 162 235)',
+  'orange': 'rgb(255 159 64)',
+  'yellow': 'rgb(255 205 86)',
+  'purple': 'rgb(153 102 255)',
+  'grey': 'rgb(201 203 207)'
+}
+LIGHT_COLORS = {
+  'red': 'rgb(255 99 132 / 50%)',
+  'green': 'rgb(75 192 192 / 50%)',
+  'blue': 'rgb(54 162 235 / 50%)',
+  'orange': 'rgb(255 159 64 / 50%)',
+  'yellow': 'rgb(255 205 86 / 50%)',
+  'purple': 'rgb(153 102 255 / 50%)',
+  'grey': 'rgb(201 203 207 / 50%)'
+}
 
-from .sql_and_models.total_post_type_stats import TotalPostTypeStatsQuery
-from .sql_and_models.monthly_stats import MonthlyStatsQuery
+COLOR_KEYS = list(CHART_COLORS.keys())
+COLOR_LENGTH = len(CHART_COLORS)
+
+
+async def get_plan_based_stats(user: CandfansUserModel) -> MonthlyPlanStats:
+    plan_based_stats_list: list[PlanStats] = await get_query_results_via_model(
+        PlanBasedStatsQuery,
+        params=[user.user_id, user.user_id]
+    )
+    labels = sorted(set([s.month for s in plan_based_stats_list]))
+    paid_plan_aggregated_stats: dict[tuple[str, int], list[PlanStats]] = defaultdict(list)
+    free_plan_aggregated_stats: list[PlanStats] = []
+    free_plan_name = ''
+    for stats in plan_based_stats_list:
+        if stats.support_price > 0:
+            paid_plan_aggregated_stats[(stats.plan_name, stats.support_price)].append(stats)
+        else:
+            free_plan_name = stats.plan_name
+            free_plan_aggregated_stats.append(stats)
+
+    return MonthlyPlanStats(
+        plan_post_stats=Stat(
+            labels=labels,
+            datasets=[
+                DataSet(
+                    label=f'{plan_name}({support_price}円)',
+                    data=[s.total_post_count for s in stats],
+                    stack=plan_name,
+                    backgroundColor=CHART_COLORS[COLOR_KEYS[i % COLOR_LENGTH]]
+                ) for i, ((plan_name, support_price), stats) in enumerate(paid_plan_aggregated_stats.items())
+            ] + ([
+                DataSet(
+                    label=f'{free_plan_name}(0円)',
+                    data=[s.total_post_count for s in free_plan_aggregated_stats],
+                    stack=free_plan_name,
+                    backgroundColor=CHART_COLORS[COLOR_KEYS[len(paid_plan_aggregated_stats) % COLOR_LENGTH]]
+                )
+            ] if free_plan_name else [])
+        ),
+        only_paid_plan_post_stats=Stat(
+            labels=labels,
+            datasets=list(itertools.chain(*[
+                [
+
+                    DataSet(
+                        label=f'{plan_name}(非バックナンバー)',
+                        data=[s.plan_post_count for s in stats],
+                        stack=plan_name,
+                        backgroundColor=CHART_COLORS[COLOR_KEYS[i % COLOR_LENGTH]]
+                    ),
+                    DataSet(
+                        label=f'{plan_name}(バックナンバー)',
+                        data=[s.backnumber_post_count for s in stats],
+                        stack=plan_name,
+                        backgroundColor=LIGHT_COLORS[COLOR_KEYS[i % COLOR_LENGTH]]
+                    )
+                ]
+                for i, ((plan_name, support_price), stats) in enumerate(paid_plan_aggregated_stats.items())
+            ]))
+        ),
+        # plan_post_summary=PlanPostSummary(
+        #     total_current_post_count=sum([s.total_current_post_count for s in plan_based_stats_list]),
+        #     total_backnumber_post_count=sum([s.total_backnumber_post_count for s in plan_based_stats_list]),
+        #     total_current_photo_post_count=sum([s.total_current_photo_post_count for s in plan_based_stats_list]),
+        #     total_backnumber_photo_post_count=sum([s.total_backnumber_photo_post_count for s in plan_based_stats_list]),
+        #     total_current_movie_post_count=sum([s.total_current_movie_post_count for s in plan_based_stats_list]),
+        #     total_backnumber_movie_post_count=sum([s.total_backnumber_movie_post_count for s in plan_based_stats_list]),
+        #     total_current_photo_count=sum([s.total_current_photo_count for s in plan_based_stats_list]),
+        #     total_backnumber_photo_count=sum([s.total_backnumber_photo_count for s in plan_based_stats_list]),
+        #     total_current_movie_time_sec=sum([s.total_current_movie_time_sec for s in plan_based_stats_list]),
+        #     total_backnumber_movie_time_sec=sum([s.total_backnumber_movie_time_sec for s in plan_based_stats_list]),
+        # ),
+    )
 
 
 async def get_monthly_post_stats(user: CandfansUserModel) -> MonthlyStats:

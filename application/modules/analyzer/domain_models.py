@@ -182,6 +182,8 @@ class CandfansPlanModel(BaseModel):
 class DataSet(BaseModel):
     label: str
     data: list[int | float]
+    stack: Optional[str] = None
+    backgroundColor: Optional[str] = None
 
 
 class Stat(BaseModel):
@@ -243,3 +245,48 @@ class PlanSummaryModel(BaseModel):
     support_price: int
     plan_detail: str
     backnumber_price: Optional[int]
+
+
+class PlanStats(BaseModel):
+    month: str
+    plan_name: str
+    plan_id: int
+    support_price: int
+    total_post_count: int
+    plan_post_count: int
+    backnumber_post_count: int
+    plan_movie_post_count: int
+    backnumber_movie_post_count: int
+    plan_movie_time_sec: float
+    backnumber_movie_time_sec: float
+    plan_photo_post_count: int
+    backnumber_photo_post_count: int
+    plan_photo_count: int
+    backnumber_photo_count: int
+
+
+class PlanPostSummary(BaseModel):
+    total_current_post_count: int
+    total_backnumber_post_count: int
+    total_current_photo_post_count: int
+    total_backnumber_photo_post_count: int
+    total_current_movie_post_count: int
+    total_backnumber_movie_post_count: int
+    total_current_photo_count: int
+    total_backnumber_photo_count: int
+    total_current_movie_time_sec: int
+    total_backnumber_movie_time_sec: int
+
+    @property
+    def total_current_movie_time(self):
+        return self.total_current_movie_time_sec / 60
+
+    @property
+    def total_backnumber_movie_time(self):
+        return self.total_backnumber_movie_time_sec
+
+
+class MonthlyPlanStats(BaseModel):
+    plan_post_stats: Stat
+    only_paid_plan_post_stats: Stat
+    # plan_post_summary: PlanPostSummary
