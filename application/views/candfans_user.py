@@ -51,6 +51,7 @@ class CandfansRequestView(View):
             context['summary_monthly_stats_json'] = user_stats.summary_monthly_stats_json
             context['plan_based_stats_json'] = user_stats.plan_based_stats_json
             context['plan_summaries'] = user_stats.plan_summaries
+            context['plan_post_summary_map'] = user_stats.plan_post_summary_map
         return render(
             request,
             'user.j2',

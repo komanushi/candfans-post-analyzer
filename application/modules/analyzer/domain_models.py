@@ -252,6 +252,7 @@ class PlanStats(BaseModel):
     plan_name: str
     plan_id: int
     support_price: int
+    backnumber_price: Optional[int]
     total_post_count: int
     plan_post_count: int
     backnumber_post_count: int
@@ -264,29 +265,50 @@ class PlanStats(BaseModel):
     plan_photo_count: int
     backnumber_photo_count: int
 
-
-class PlanPostSummary(BaseModel):
-    total_current_post_count: int
-    total_backnumber_post_count: int
-    total_current_photo_post_count: int
-    total_backnumber_photo_post_count: int
-    total_current_movie_post_count: int
-    total_backnumber_movie_post_count: int
-    total_current_photo_count: int
-    total_backnumber_photo_count: int
-    total_current_movie_time_sec: int
-    total_backnumber_movie_time_sec: int
+    @property
+    def plan_movie_time(self):
+        return self.plan_movie_time_sec / 60
 
     @property
-    def total_current_movie_time(self):
-        return self.total_current_movie_time_sec / 60
+    def backnumber_movie_time(self):
+        return self.backnumber_movie_time_sec / 60
+
+
+class PlanPostSummary(BaseModel):
+    plan_name: str
+    support_price: int
+    backnumber_price: Optional[int]
+    first_month: str
+    total_plan_post_count: int
+    total_backnumber_post_count: int
+    total_plan_photo_post_count: int
+    total_backnumber_photo_post_count: int
+    total_plan_movie_post_count: int
+    total_backnumber_movie_post_count: int
+    total_plan_photo_count: int
+    total_backnumber_photo_count: int
+    total_plan_movie_time_sec: float
+    total_backnumber_movie_time_sec: float
+
+    @property
+    def total_plan_movie_time(self):
+        return self.total_plan_movie_time_sec / 60
+
+    @property
+    def total_plan_movie_hour(self):
+        return self.total_plan_movie_time_sec / 60 / 60
 
     @property
     def total_backnumber_movie_time(self):
-        return self.total_backnumber_movie_time_sec
+        return self.total_backnumber_movie_time_sec / 60
 
+    @property
+    def total_backnumber_movie_hour(self):
+        return self.total_backnumber_movie_time_sec / 60 / 60
 
 class MonthlyPlanStats(BaseModel):
     plan_post_stats: Stat
-    only_paid_plan_post_stats: Stat
-    # plan_post_summary: PlanPostSummary
+    plan_photo_post_count_stats: Stat
+    plan_photo_count_stats: Stat
+    plan_movie_post_count_stats: Stat
+    plan_movie_time_stats: Stat

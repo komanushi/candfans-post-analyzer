@@ -29,7 +29,8 @@ plan as (
     select
         plan_id,
         plan_name,
-        support_price
+        support_price,
+        backnumber_price
     from
         analyzer_candfansplan
     where
@@ -159,6 +160,7 @@ select
     plan.plan_name,
     plan.plan_id,
     plan.support_price,
+    plan.backnumber_price,
     COALESCE(total_post_count, 0) as total_post_count,
     COALESCE(plan_post_count, 0) as plan_post_count,
     COALESCE(backnumber_post_count, 0) as backnumber_post_count,
@@ -182,7 +184,7 @@ from
     plan.plan_id = aggregate_stats.plan_id
 order by
     month,
-    support_price,
+    support_price desc,
     plan_name
 """
 
