@@ -5,10 +5,10 @@ from ...domain_models import PostTypeStat
 
 query = """\
 select
-    sum((post_type=0)::int) as PUBLIC_ITEM,
-    sum((post_type=1)::int) as LIMITED_ACCESS_ITEM,
-    sum((post_type=2)::int) as INDIVIDUAL_ITEM,
-    sum((post_type=3)::int) as BACK_NUMBER_ITEM
+    coalesce(sum((post_type=0)::int), 0) as PUBLIC_ITEM,
+    coalesce(sum((post_type=1)::int), 0) as LIMITED_ACCESS_ITEM,
+    coalesce(sum((post_type=2)::int), 0) as INDIVIDUAL_ITEM,
+    coalesce(sum((post_type=3)::int), 0) as BACK_NUMBER_ITEM
 from
     analyzer_candfanspost
 where
