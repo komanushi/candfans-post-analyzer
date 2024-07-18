@@ -5,6 +5,7 @@ from modules.analyzer.models.candfans_plan_fans_history import CandfansPlanFansH
 from modules.analyzer.models.candfans_post import CandfansPost
 from modules.analyzer.models.candfans_post_plan_relation import CandFansPostPlanRelation
 from modules.analyzer.models.search_history import SearchHistory
+from modules.analyzer.models.candfans_creator_ranking import CandfansCreatorDailyRanking
 
 __all__ = [
     'CandfansUser',
@@ -13,5 +14,6 @@ __all__ = [
     'CandfansPlan',
     'CandfansPlanFansHistory',
     'CandFansPostPlanRelation',
+    'CandfansCreatorDailyRanking',
     'SearchHistory',
 ]

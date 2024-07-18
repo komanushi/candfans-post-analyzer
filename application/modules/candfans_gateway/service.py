@@ -1,5 +1,8 @@
-from candfans_client.async_client import AsyncAnonymousCandFansClient
+from candfans_client.async_client import AsyncAnonymousCandFansClient, AsyncCandFansClient
 from candfans_client.models.timeline import PostType, Post
+from candfans_client.models.search import BetweenType, Creator
+from django.conf import settings
+
 from .domain_models import TimelinePosts, PostMap
 
 
@@ -51,3 +54,18 @@ async def _get_timeline(
     async for post in posts:
         result.append(post)
     return result
+
+
+async def get_daily_popular_creator(max_ranking=50) -> list[Creator]:
+    client = AsyncCandFansClient(
+        email=settings.CANDFANS_EMAIL,
+        password=settings.CANDFANS_PASSWORD
+    )
+    await client.login()
+    creators = []
+    # ページングで同じユーザーが戻される可能性があるので少し余剰をもたせる
+    max_page = (max_ranking // 5) + 2
+    async for creator in client.get_popular_creators(between=BetweenType.DAY, max_page=max_page):
+        if creator not in creators:
+            creators.append(creator)
+    return creators[:max_ranking]

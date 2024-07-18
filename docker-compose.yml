@@ -29,6 +29,8 @@ services:
       REDIS_PORT: 6379
       REDIS_DB: 0
       SERVICE_DOMAIN: 'nginx:8000'
+      CANDFANS_EMAIL: $CANDFANS_EMAIL
+      CANDFANS_PASSWORD: $CANDFANS_PASSWORD
     links:
       - db
       - redis

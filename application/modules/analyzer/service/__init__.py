@@ -19,6 +19,8 @@ from .candfans_post import (
 )
 from .candfans_post_stats import get_monthly_post_stats, get_plan_based_stats
 from .search_history import create_search_history
+from .candfans_daily_ranking import save_ranking
+
 
 __all__ = [
     # user
@@ -42,4 +44,6 @@ __all__ = [
     'get_plan_based_stats',
     # sh
     'create_search_history',
+    # candfans_daily_ranking
+    'save_ranking',
 ]

@@ -169,3 +169,6 @@ LOGGING = {
         },
     },
 }
+
+CANDFANS_EMAIL = os.environ.get('CANDFANS_EMAIL')
+CANDFANS_PASSWORD = os.environ.get('CANDFANS_PASSWORD')
