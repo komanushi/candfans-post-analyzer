@@ -6,7 +6,7 @@ from django.db import models
 class CandfansCreatorDailyRanking(models.Model):
     day = models.DateField()
     rank = models.IntegerField()
-    user_id = models.IntegerField(primary_key=True)
+    user_id = models.IntegerField()
     user_code = models.CharField(max_length=255)
     username = models.TextField()
     profile_img = models.CharField(max_length=500)
@@ -18,6 +18,9 @@ class CandfansCreatorDailyRanking(models.Model):
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (('day', 'user_id'),)
 
     @classmethod
     async def create(

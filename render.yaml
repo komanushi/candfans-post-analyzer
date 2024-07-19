@@ -157,7 +157,7 @@ services:
     dockerContext: .
     dockerfilePath: ./docker/app/Dockerfile
     dockerCommand: poetry run python ./manage.py save_ranking
-    schedule: 30 23 * * *
+    schedule: 30 14 * * *
     envVars:
       - fromGroup: django-shared
       - key: SERVICE_DOMAIN
