@@ -5,7 +5,7 @@ from typing import Optional
 from candfans_client.models.user import QueriedUser, Plan
 from django.conf import settings
 from django.utils import timezone
-from pydantic import BaseModel, conint
+from pydantic import BaseModel, conint, conlist
 
 
 EXPIRED_DAYS = settings.SYNC_EXPIRED_DAYS
@@ -306,9 +306,23 @@ class PlanPostSummary(BaseModel):
     def total_backnumber_movie_hour(self):
         return self.total_backnumber_movie_time_sec / 60 / 60
 
+
 class MonthlyPlanStats(BaseModel):
     plan_post_stats: Stat
     plan_photo_post_count_stats: Stat
     plan_photo_count_stats: Stat
     plan_movie_post_count_stats: Stat
     plan_movie_time_stats: Stat
+
+
+class DailyRank(BaseModel):
+    day: datetime.date
+    rank: Optional[int]
+
+
+class DailyRanks(BaseModel):
+    ranks: conlist(DailyRank, min_length=30, max_length=30)
+
+    @property
+    def valid_ranks(self):
+        return [r for r in self.ranks if r.rank is not None]

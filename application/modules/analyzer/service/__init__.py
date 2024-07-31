@@ -19,7 +19,7 @@ from .candfans_post import (
 )
 from .candfans_post_stats import get_monthly_post_stats, get_plan_based_stats
 from .search_history import create_search_history
-from .candfans_daily_ranking import save_ranking
+from .candfans_daily_ranking import save_ranking, get_daily_ranking_list_by_user_id
 
 
 __all__ = [
@@ -46,4 +46,5 @@ __all__ = [
     'create_search_history',
     # candfans_daily_ranking
     'save_ranking',
+    'get_daily_ranking_list_by_user_id',
 ]

@@ -54,3 +54,10 @@ class CandfansCreatorDailyRanking(models.Model):
     @classmethod
     async def delete_by_day(cls, day: datetime.date):
         return await cls.objects.filter(day=day).adelete()
+
+    @classmethod
+    async def get_list_by_user_id(cls, user_id: int) -> list['CandfansCreatorDailyRanking']:
+        ranks = []
+        async for rank in cls.objects.filter(user_id=user_id):
+            ranks.append(rank)
+        return ranks

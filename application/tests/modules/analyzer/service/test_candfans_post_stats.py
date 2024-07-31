@@ -10,7 +10,6 @@ from tests.factories.models.candfans_post import CandfansPostFactory
 from tests.factories.models.candfans_post_plan_relation import CandFansPostPlanRelationFactory
 
 
-
 class CandfansPostServiceTest(TransactionTestCase):
 
     async def test_get_monthly_post_stats(self):
