@@ -39,12 +39,13 @@ class CandfansRequestView(View):
             if not is_new_user:
                 await plans_case.resync_candfans_plan(user_code)
 
+            # SyncStatusの最新化
             await analyzer_sv.set_sync_status(candfans_user, status=SyncStatus.SYNCING)
             django_rq.enqueue(users_case.sync_user_stats, candfans_user.user_id)
 
-        # SyncStatusの最新化
         candfans_user = await analyzer_sv.get_candfans_user_by_user_id(candfans_user.user_id)
         if candfans_user:
+            daily_ranks = await analyzer_sv.get_daily_ranking_list_by_user_id(candfans_user.user_id)
             context['candfans_user'] = candfans_user
             user_stats = await stats_case.generate_stats(candfans_user)
             context['monthly_stats'] = user_stats.monthly_stats
@@ -52,6 +53,8 @@ class CandfansRequestView(View):
             context['plan_based_stats_json'] = user_stats.plan_based_stats_json
             context['plan_summaries'] = user_stats.plan_summaries
             context['plan_post_summary_map'] = user_stats.plan_post_summary_map
+            context['daily_ranking_json'] = daily_ranks.rank_json
+
         return render(
             request,
             'user.j2',

@@ -152,3 +152,64 @@
     </table>
   </div>
   {% endfor %}
+  <h4 class="_alignCenter">デイリーランキング</h4>
+
+  <div class="container rank-graph-container">
+    <canvas id="daily_ranking"></canvas>
+  </div>
+  <script>
+    const ctx = document.getElementById('daily_ranking');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dailyRanking.labels,
+        datasets: dailyRanking.datasets,
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            stacked: true,
+          },
+          y: {
+            stacked: true,
+            reverse: true,
+            min: 1,
+            max: 51,
+            stepSize: 1,
+            ticks: {
+              callback: function(value){
+                let label = ''
+                if(value === 0){
+                    label = ""
+                }
+                else if(value <= 50){
+                    label = value + '位'
+                }
+                else if(value > 50){
+                    label = "圏外"
+                }
+                else{
+                    label = ""
+                }
+                return  label
+              }
+            }
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: '{{ candfans_user.username }}さんのランキング遷移'
+          },
+        },
+      },
+    });
+  </script>
+<style>
+  .rank-graph-container {
+      height: 400px;
+      max-width: 500px;
+  }
+</style>

@@ -1,6 +1,5 @@
-function create_graph(baseStats, id, title) {
+function create_graph(stats, id, title) {
   const ctx = document.getElementById(id);
-  const stats = baseStats[id];
   new Chart(ctx, {
     type: 'bar',
     data: {

@@ -1,5 +1,6 @@
 import datetime
 import enum
+import json
 from typing import Optional
 
 from candfans_client.models.user import QueriedUser, Plan
@@ -326,3 +327,20 @@ class DailyRanks(BaseModel):
     @property
     def valid_ranks(self):
         return [r for r in self.ranks if r.rank is not None]
+
+    @property
+    def formated_ranks(self):
+        return [
+            r.rank if r.rank is not None else 51
+            for r in self.ranks
+        ]
+
+    @property
+    def rank_json(self):
+        return json.dumps({
+            'labels': [r.day.isoformat() for r in self.ranks],
+            'datasets': [{
+                'label': 'rank',
+                'data': self.formated_ranks,
+            }],
+        }, indent=4)
