@@ -6,6 +6,7 @@ from modules.analyzer.domain_models import (
     SyncStatus
 )
 from modules.candfans_gateway import service as cg_sv
+from modules.exceptions import NotFoundUser
 from .plans_case import resync_candfans_plan
 
 
@@ -52,8 +53,11 @@ async def sync_user_stats(user_id: int):
     # if not candfans_user.is_necessary_to_refresh:
     #     print(f'SKIP {candfans_user.is_necessary_to_refresh=}')
     #     return
-
-    await resync_candfans_plan(candfans_user.user_code)
+    try:
+        await resync_candfans_plan(candfans_user.user_code)
+    except NotFoundUser:
+        await analyzer_sv.mark_user_deleted(candfans_user)
+        return
     timeline_map = await cg_sv.get_timelines(user_id=user_id)
     target_posts = []
     for t_post in timeline_map:

@@ -49,6 +49,15 @@ async def update_user_code(candfans_user: CandfansUserModel):
     )
 
 
+async def mark_user_deleted(candfans_user: CandfansUserModel):
+    await CandfansUser.update(
+        user_id=candfans_user.user_id,
+        params={
+            'is_deleted': True,
+        }
+    )
+
+
 async def set_sync_status(candfans_user: CandfansUserModel, status: SyncStatus) -> CandfansUserModel:
     user = await CandfansUser.get_by_user_id(candfans_user.user_id)
     user.sync_status = status.value

@@ -7,7 +7,8 @@ from .candfans_user import (
     get_candfans_user_by_user_id,
     get_candfans_user_by_user_code,
     get_recently_synced_candfans_user_list_order_by_last_synced_at,
-    get_candfans_user_list_order_by_last_synced_at_asc
+    get_candfans_user_list_order_by_last_synced_at_asc,
+    mark_user_deleted
 )
 from .candfans_plan import (
     create_candfans_plan,
@@ -33,6 +34,7 @@ __all__ = [
     'get_candfans_user_by_user_code',
     'get_recently_synced_candfans_user_list_order_by_last_synced_at',
     'get_candfans_user_list_order_by_last_synced_at_asc',
+    'mark_user_deleted',
     # plan
     'create_candfans_plan',
     'get_candfans_plan_summaries_by_user',

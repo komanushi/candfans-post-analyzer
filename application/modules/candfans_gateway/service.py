@@ -1,16 +1,25 @@
+from typing import Optional
+
 from candfans_client.async_client import AsyncAnonymousCandFansClient, AsyncCandFansClient
+from candfans_client.exceptions import CandFansException
 from candfans_client.models.timeline import PostType, Post
 from candfans_client.models.search import BetweenType, Creator
+from candfans_client.models.user import UserInfo
 from django.conf import settings
 
+from modules.exceptions import NotFoundUser
 from .domain_models import TimelinePosts, PostMap
 
 
-async def get_candfans_user_info_by_user_code(user_code: str):
+async def get_candfans_user_info_by_user_code(user_code: str) -> Optional[UserInfo]:
     client = AsyncAnonymousCandFansClient()
-    candfans_user_info = await client.get_users(user_code=user_code)
-    return candfans_user_info
-
+    try:
+        candfans_user_info = await client.get_users(user_code=user_code)
+        return candfans_user_info
+    except CandFansException as e:
+        if 'アカウントが見つかりませんでした。' in str(e):
+            raise NotFoundUser(f'{user_code} is not found')
+        raise e
 
 async def get_timelines(user_id: int, max_months: int = 6) -> list[TimelinePosts]:
     """

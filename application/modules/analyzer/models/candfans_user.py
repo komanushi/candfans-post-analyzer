@@ -13,6 +13,7 @@ class CandfansUser(models.Model):
     sync_requested_at = models.DateTimeField(null=True, default=None)
     last_synced_at = models.DateTimeField(null=True, default=None)
     detail = models.OneToOneField('CandfansUserDetail', on_delete=models.SET_NULL, null=True)
+    is_deleted = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -72,7 +73,7 @@ class CandfansUser(models.Model):
     async def get_list_order_by_last_synced_at_asc(cls, limit: int) -> list['CandfansUser']:
         user_list = []
         query = (
-            cls.objects.all().select_related('detail').order_by('last_synced_at')[:limit]
+            cls.objects.exclude(is_deleted=True).select_related('detail').order_by('last_synced_at')[:limit]
         )
         async for user in query:
             user_list.append(user)
