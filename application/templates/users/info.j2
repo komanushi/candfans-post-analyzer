@@ -203,6 +203,20 @@
             display: true,
             text: '{{ candfans_user.username }}さんのランキング遷移'
           },
+          tooltip: {
+            callbacks: {
+                label: function(context) {
+                    let label = '順位: '
+                    let rank = context.parsed.y
+                    if (parseInt(rank) > 50) {
+                      label += '圏外'
+                    } else {
+                      label += `${context.parsed.y}位`
+                    }
+                    return label;
+                }
+            }
+          },
         },
       },
     });

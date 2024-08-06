@@ -340,7 +340,7 @@ class DailyRanks(BaseModel):
         return json.dumps({
             'labels': [r.day.isoformat() for r in self.ranks],
             'datasets': [{
-                'label': 'rank',
+                'label': 'デイリー順位',
                 'data': self.formated_ranks,
             }],
         }, indent=4)
