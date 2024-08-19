@@ -9,7 +9,7 @@ from ..domain_models import DailyRanks, DailyRank
 
 async def save_ranking():
     today = timezone.localtime(timezone.now()).date()
-    creators = await cg_sv.get_daily_popular_creator()
+    creators = await cg_sv.get_daily_popular_creator(max_ranking=100)
     try:
         for i, creator in enumerate(creators):
             await CandfansCreatorDailyRanking.create(
