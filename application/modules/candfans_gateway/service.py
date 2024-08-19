@@ -3,7 +3,7 @@ from typing import Optional
 from candfans_client.async_client import AsyncAnonymousCandFansClient, AsyncCandFansClient
 from candfans_client.exceptions import CandFansException
 from candfans_client.models.timeline import PostType, Post
-from candfans_client.models.search import BetweenType, Creator
+from candfans_client.models.search import BetweenType, Creator, RankingCreator
 from candfans_client.models.user import UserInfo
 from django.conf import settings
 
@@ -78,3 +78,15 @@ async def get_daily_popular_creator(max_ranking=50) -> list[Creator]:
         if creator not in creators:
             creators.append(creator)
     return creators[:max_ranking]
+
+
+async def get_creator_ranking(max_ranking: int = 100) -> list[RankingCreator]:
+    client = AsyncAnonymousCandFansClient()
+    ranking_creators = []
+    async for rank in client.get_creator_ranking(
+        start_page=1,
+        max_page=1,
+        per_page=max_ranking
+    ):
+        ranking_creators.append(rank)
+    return ranking_creators

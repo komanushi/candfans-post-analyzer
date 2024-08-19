@@ -3,24 +3,21 @@ from datetime import datetime
 from django.db import models
 
 """
-検索画面でのクリエイター順序。
-公式ではランキングと呼ばなくなったもの
+新しいデイリーランキング対応
 """
 
 
-class CandfansCreatorDailyRanking(models.Model):
+class CandfansRankingCreator(models.Model):
     day = models.DateField()
     rank = models.IntegerField()
     user_id = models.IntegerField()
     user_code = models.CharField(max_length=255)
     username = models.TextField()
-    profile_img = models.CharField(max_length=500)
-    profile_text = models.TextField()
     follow_cnt = models.IntegerField()
     follower_cnt = models.IntegerField()
     like_cnt = models.IntegerField()
     is_official_creator = models.BooleanField()
-
+    plans = models.JSONField()
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -35,25 +32,23 @@ class CandfansCreatorDailyRanking(models.Model):
             user_id: int,
             user_code: str,
             username: str,
-            profile_img: str,
-            profile_text: str,
             follow_cnt: int,
             follower_cnt: int,
             like_cnt: int,
             is_official_creator: bool,
-    ) -> 'CandfansCreatorDailyRanking':
+            plans: list
+    ) -> 'CandfansRankingCreator':
         return await cls.objects.acreate(
             day=day,
             rank=rank,
             user_id=user_id,
             user_code=user_code,
             username=username,
-            profile_img=profile_img,
-            profile_text=profile_text,
             follow_cnt=follow_cnt,
             follower_cnt=follower_cnt,
             like_cnt=like_cnt,
             is_official_creator=is_official_creator,
+            plans=plans,
         )
 
     @classmethod
@@ -61,7 +56,7 @@ class CandfansCreatorDailyRanking(models.Model):
         return await cls.objects.filter(day=day).adelete()
 
     @classmethod
-    async def get_list_by_user_id(cls, user_id: int) -> list['CandfansCreatorDailyRanking']:
+    async def get_list_by_user_id(cls, user_id: int) -> list['CandfansRankingCreator']:
         ranks = []
         async for rank in cls.objects.filter(user_id=user_id):
             ranks.append(rank)
