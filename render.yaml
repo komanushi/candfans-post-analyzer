@@ -150,37 +150,6 @@ services:
           property: port
 
   - type: cron
-    name: candfans-analyzer-save-ranking
-    region: singapore
-    plan: starter
-    runtime: docker
-    dockerContext: .
-    dockerfilePath: ./docker/app/Dockerfile
-    dockerCommand: poetry run python ./manage.py save_ranking
-    schedule: 30 14 * * *
-    envVars:
-      - fromGroup: django-shared
-      - key: SERVICE_DOMAIN
-        fromService:
-          type: web
-          name: candfans-analyzer
-          property: host
-      - key: DATABASE_URL
-        fromDatabase:
-          name: candfans-analyzer-db
-          property: connectionString
-      - key: REDIS_HOSTNAME
-        fromService:
-          type: redis
-          name: candfans-analyzer-redis
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: candfans-analyzer-redis
-          property: port
-
-  - type: cron
     name: candfans-analyzer-save-creator-ranking
     region: singapore
     plan: starter
