@@ -331,7 +331,7 @@ class DailyRanks(BaseModel):
     @property
     def formated_ranks(self):
         return [
-            r.rank if r.rank is not None else 51
+            r.rank if r.rank is not None else 101
             for r in self.ranks
         ]
 

@@ -176,7 +176,7 @@
             stacked: true,
             reverse: true,
             min: 1,
-            max: 51,
+            max: 101,
             stepSize: 1,
             ticks: {
               callback: function(value){
@@ -184,10 +184,10 @@
                 if(value === 0){
                     label = ""
                 }
-                else if(value <= 50){
+                else if(value <= 100){
                     label = value + '位'
                 }
-                else if(value > 50){
+                else if(value > 100){
                     label = "圏外"
                 }
                 else{
@@ -208,7 +208,7 @@
                 label: function(context) {
                     let label = '順位: '
                     let rank = context.parsed.y
-                    if (parseInt(rank) > 50) {
+                    if (parseInt(rank) > 100) {
                       label += '圏外'
                     } else {
                       label += `${context.parsed.y}位`

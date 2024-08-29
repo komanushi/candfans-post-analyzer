@@ -4,7 +4,7 @@ from freezegun import freeze_time
 from django.test import TransactionTestCase
 
 from modules.analyzer import service as analyzer_sv
-from tests.factories.models.candfans_daily_ranking import CandfansCreatorDailyRankingFactory
+from tests.factories.models.candfans_daily_ranking import CandfansRankingCreatorFactory
 
 
 class CandfansPostServiceTest(TransactionTestCase):
@@ -12,12 +12,12 @@ class CandfansPostServiceTest(TransactionTestCase):
     async def test_get_monthly_post_stats(self):
         user_id = 100
         base_date = datetime.date(2024, 7, 31)
-        await CandfansCreatorDailyRankingFactory.create(
+        await CandfansRankingCreatorFactory.create(
             day=datetime.date(2024, 7, 1),
             rank=1,
             user_id=user_id
         )
-        await CandfansCreatorDailyRankingFactory.create(
+        await CandfansRankingCreatorFactory.create(
             day=datetime.date(2024, 7, 2),
             rank=2,
             user_id=user_id
