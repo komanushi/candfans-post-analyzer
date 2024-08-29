@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.utils import timezone
 
 from modules.candfans_gateway import service as cg_sv
-from ..models import CandfansCreatorDailyRanking, CandfansRankingCreator
+from ..models import CandfansRankingCreator
 from ..domain_models import DailyRanks, DailyRank
 
 

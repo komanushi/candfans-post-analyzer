@@ -8,7 +8,7 @@ from django.db import models
 """
 
 
-class CandfansCreatorDailyRanking(models.Model):
+class OldCandfansCreatorDailyRanking(models.Model):
     day = models.DateField()
     rank = models.IntegerField()
     user_id = models.IntegerField()
@@ -41,7 +41,7 @@ class CandfansCreatorDailyRanking(models.Model):
             follower_cnt: int,
             like_cnt: int,
             is_official_creator: bool,
-    ) -> 'CandfansCreatorDailyRanking':
+    ) -> 'OldCandfansCreatorDailyRanking':
         return await cls.objects.acreate(
             day=day,
             rank=rank,
@@ -61,7 +61,7 @@ class CandfansCreatorDailyRanking(models.Model):
         return await cls.objects.filter(day=day).adelete()
 
     @classmethod
-    async def get_list_by_user_id(cls, user_id: int) -> list['CandfansCreatorDailyRanking']:
+    async def get_list_by_user_id(cls, user_id: int) -> list['OldCandfansCreatorDailyRanking']:
         ranks = []
         async for rank in cls.objects.filter(user_id=user_id):
             ranks.append(rank)
