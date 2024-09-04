@@ -1,7 +1,7 @@
 import factory
 from django.utils import timezone
 
-from modules.analyzer.models import CandfansRankingCreator
+from modules.analyzer.models import CandfansCreatorDailyRanking
 from faker import Faker
 
 from .base import AsyncMixin
@@ -11,7 +11,7 @@ faker = Faker()
 
 class CandfansRankingCreatorFactory(AsyncMixin, factory.django.DjangoModelFactory):
     class Meta:
-        model = CandfansRankingCreator
+        model = CandfansCreatorDailyRanking
 
     day = timezone.now().date()
     rank = 1

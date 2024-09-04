@@ -32,7 +32,6 @@ class CandfansPost(models.Model):
     is_like = models.BooleanField()
     can_browsing = models.BooleanField()
     can_send_chip = models.BooleanField()
-    r18 = models.IntegerField()
     apply_status = models.IntegerField()
     is_progressed = models.BooleanField()
     is_accept_comment = models.BooleanField()

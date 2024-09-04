@@ -3,9 +3,11 @@ from typing import Optional
 from candfans_client.async_client import AsyncAnonymousCandFansClient, AsyncCandFansClient
 from candfans_client.exceptions import CandFansException
 from candfans_client.models.timeline import PostType, Post
-from candfans_client.models.search import BetweenType, Creator, RankingCreator
+from candfans_client.models.search import Creator, RankingCreator
 from candfans_client.models.user import UserInfo
+from dateutil import relativedelta
 from django.conf import settings
+from django.utils import timezone
 
 from modules.exceptions import NotFoundUser
 from .domain_models import TimelinePosts, PostMap
@@ -21,6 +23,7 @@ async def get_candfans_user_info_by_user_code(user_code: str) -> Optional[UserIn
             raise NotFoundUser(f'{user_code} is not found')
         raise e
 
+
 async def get_timelines(user_id: int, max_months: int = 6) -> list[TimelinePosts]:
     """
     {
@@ -32,19 +35,22 @@ async def get_timelines(user_id: int, max_months: int = 6) -> list[TimelinePosts
     }
     """
     client = AsyncAnonymousCandFansClient()
-    timeline_months = await client.get_timeline_month(user_id)
     # 直近6ヶ月分までしか見ない(%Y-%m)
+    today = timezone.now().date()
+    timeline_months = sorted([
+        (today - relativedelta.relativedelta(months=i)).strftime('%Y-%m')
+        for i in range(max_months)
+    ])
     timelines = []
-    for timeline_month in timeline_months[:max_months]:
+    for timeline_month in timeline_months:
         # (%Y-%m)
-        yyyy_mm = timeline_month.formatted_month_str
         timelines.append(TimelinePosts(
-            month=yyyy_mm,
+            month=timeline_month,
             post_map=PostMap(
-                public_item=await _get_timeline(client, user_id, yyyy_mm, PostType.PUBLIC_ITEM),
-                limited_access_item=await _get_timeline(client, user_id, yyyy_mm, PostType.LIMITED_ACCESS_ITEM),
-                individual_access_item=await _get_timeline(client, user_id, yyyy_mm, PostType.INDIVIDUAL_ITEM),
-                back_number_item=await _get_timeline(client, user_id, yyyy_mm, PostType.BACK_NUMBER_ITEM),
+                public_item=await _get_timeline(client, user_id, timeline_month, PostType.PUBLIC_ITEM),
+                limited_access_item=await _get_timeline(client, user_id, timeline_month, PostType.LIMITED_ACCESS_ITEM),
+                individual_access_item=await _get_timeline(client, user_id, timeline_month, PostType.INDIVIDUAL_ITEM),
+                back_number_item=await _get_timeline(client, user_id, timeline_month, PostType.BACK_NUMBER_ITEM),
             )
         ))
     return timelines

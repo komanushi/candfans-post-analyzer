@@ -132,7 +132,6 @@ class CandfansPlanModel(BaseModel):
     support_price: int
     total_support_price: int
     plan_detail: str
-    r18: int
     status: int
     fans_cnt: Optional[int]
     is_fans: bool
@@ -160,7 +159,6 @@ class CandfansPlanModel(BaseModel):
             support_price=param.support_price,
             total_support_price=param.total_support_price,
             plan_detail=param.plan_detail,
-            r18=param.r18,
             status=param.status,
             fans_cnt=param.fans_cnt,
             is_fans=param.is_fans,

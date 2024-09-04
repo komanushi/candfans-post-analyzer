@@ -18,7 +18,6 @@ class CandfansPlanFactory(AsyncMixin, factory.django.DjangoModelFactory):
     support_price = factory.Sequence(lambda n: n)
     total_support_price = factory.Sequence(lambda n: n)
     plan_detail = factory.Faker('text')
-    r18 = factory.Sequence(lambda n: n)
     status = factory.Sequence(lambda n: n)
     fans_cnt = factory.Sequence(lambda n: n)
     is_fans = factory.Faker('boolean')

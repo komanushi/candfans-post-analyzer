@@ -11,7 +11,6 @@ class CandfansPlan(models.Model):
     support_price = models.IntegerField()
     total_support_price = models.IntegerField()
     plan_detail = models.TextField()
-    r18 = models.IntegerField()
     status = models.IntegerField()
     fans_cnt = models.IntegerField(null=True, blank=True)
     is_fans = models.BooleanField(default=False)

@@ -14,7 +14,6 @@ class CandfansPlanModelFactory(factory.Factory):
     support_price = factory.Faker('random_int')
     total_support_price = factory.Faker('random_int')
     plan_detail = factory.Faker('sentence')
-    r18 = factory.Faker('random_int')
     status = factory.Faker('random_int')
     fans_cnt = factory.Faker('random_int')
     is_fans = factory.Faker('boolean')

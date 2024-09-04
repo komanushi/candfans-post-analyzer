@@ -42,7 +42,6 @@ class CandfansPostFactory(AsyncMixin, factory.django.DjangoModelFactory):
     is_like = factory.Faker('boolean')
     can_browsing = factory.Faker('boolean')
     can_send_chip = factory.Faker('boolean')
-    r18 = factory.Sequence(lambda n: n)
     apply_status = factory.Sequence(lambda n: n)
     is_progressed = factory.Faker('boolean')
     is_accept_comment = factory.Faker('boolean')
