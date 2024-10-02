@@ -16,4 +16,6 @@ class IndexView(View):
 
     async def post(self, request, *args, **kwargs):
         user_code = request.POST.get('user_code')
+        if not user_code:
+            return redirect('index')
         return redirect('candfans_user_request', user_code=user_code)
