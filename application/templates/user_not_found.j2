@@ -13,7 +13,9 @@
 <div class="jumbo _danger">
   <h3>Not Found</h3>
   <div>
-    {{ user_code }}さんは存在しないアカウントです。
+    <a href="https://candfans.jp/{{ user_code }}">{{ user_code }}さん</a>
+    は存在しないアカウントのようです。
+
   </div>
   <div>
     <a href="{% url 'index' %}">Back to Top.</a>

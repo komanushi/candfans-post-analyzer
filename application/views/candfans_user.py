@@ -6,6 +6,7 @@ from django.views import View
 
 from modules.analyzer import service as analyzer_sv
 from modules.analyzer.domain_models import SyncStatus
+from modules.exceptions import NotFoundUser
 from usecase import (
     users_case,
     plans_case,
@@ -28,12 +29,10 @@ class CandfansRequestView(View):
             try:
                 candfans_user, candfans_plans = await users_case.create_new_candfans_user(user_code)
                 is_new_user = True
-            except CandFansException as e:
-                message = str(e)
-                if 'アカウントが見つかりませんでした' in message:
-                    return redirect('candfans_user_not_found', user_code=user_code)
-                else:
-                    return redirect('candfans_user_request', user_code=user_code)
+            except NotFoundUser:
+                return redirect('candfans_user_not_found', user_code=user_code)
+            except CandFansException:
+                return redirect('candfans_user_request', user_code=user_code)
 
         if candfans_user.is_necessary_to_refresh:
             if not is_new_user:

@@ -152,6 +152,11 @@
     </table>
   </div>
   {% endfor %}
+{#  <h4 class="_alignCenter">活動グラフ</h4>#}
+{#  <div class="container activity-graph-container">#}
+{#    <div id="daily_activity"></div>#}
+{#  </div>#}
+
   <h4 class="_alignCenter">デイリーランキング</h4>
 
   <div class="container rank-graph-container">
@@ -220,8 +225,36 @@
         },
       },
     });
+
+
+    // インスタンス作成
+    const cal = new CalHeatmap();
+    const data = [
+        { date: '2012-01-01', value: 3 },
+        { date: '2012-01-02', value: 6 },
+    ];
+    // 初期化
+    cal.paint({
+      itemSelector: "#daily_activity", // 描画するHTML要素のセレクタ
+      data: {
+        source: data,               // データ値キー
+      },
+      range: 6,
+      domain: {
+        type: 'month',
+        gutter: 4,
+      },
+      subDomain: {
+        type: 'day', width: 15, height: 15
+      },
+    });
+
   </script>
 <style>
+  .activity-graph-container {
+      height: 400px;
+      max-width: 700px;
+  }
   .rank-graph-container {
       height: 400px;
       max-width: 500px;

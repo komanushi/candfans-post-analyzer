@@ -9,7 +9,9 @@
   <title>{{ candfans_user.user_code }}さんの情報</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/cal-heatmap/dist/cal-heatmap.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/cal-heatmap/dist/cal-heatmap.css">
   <script src="{% static 'js/graph.js' %}"></script>
   <script>
     const summaryMonthlyStats = JSON.parse('{{ summary_monthly_stats_json | escapejs }}');
