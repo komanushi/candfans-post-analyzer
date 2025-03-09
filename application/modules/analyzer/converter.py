@@ -129,7 +129,7 @@ def convert_from_post_to_candfans_post(post: Post) -> CandfansPost:
         contents_path2=post.contents_path2,
         contents_path3=post.contents_path3,
         contents_path4=post.contents_path4,
-        image_count=post.image_count,
+        image_count=post.attachment_length if post.contents_type == 1 else 0,
         movie_time=post.movie_time,
         secret_file=post.secret_file,
         thumbnail_file=post.thumbnail_file,
