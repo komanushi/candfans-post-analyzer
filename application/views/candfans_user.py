@@ -53,6 +53,9 @@ class CandfansRequestView(View):
             context['plan_summaries'] = user_stats.plan_summaries
             context['plan_post_summary_map'] = user_stats.plan_post_summary_map
             context['daily_ranking_json'] = daily_ranks.rank_json
+            # Get available years for year summary navigation
+            all_years = await analyzer_sv.get_all_years_with_posts(candfans_user)
+            context['all_years'] = all_years
 
         return render(
             request,
@@ -69,5 +72,35 @@ class CandidatesUserNotFoundView(View):
         return render(
             request,
             'user_not_found.j2',
+            context=context,
+        )
+
+
+class CandfansUserYearSummaryView(View):
+    async def get(self, request, user_code: str, year: int, *args, **kwargs):
+        user_code = user_code.split('#')[0]
+        context = {
+            'user_code': user_code,
+            'year': year,
+        }
+
+        # Get user
+        candfans_user = await analyzer_sv.get_candfans_user_by_user_code(user_code)
+        if not candfans_user:
+            return redirect('candfans_user_not_found', user_code=user_code)
+
+        # Get yearly stats
+        yearly_stats = await analyzer_sv.get_yearly_post_stats(candfans_user, year)
+
+        # Get all available years for navigation
+        all_years = await analyzer_sv.get_all_years_with_posts(candfans_user)
+
+        context['candfans_user'] = candfans_user
+        context['yearly_stats'] = yearly_stats
+        context['all_years'] = all_years
+
+        return render(
+            request,
+            'user_year_summary.j2',
             context=context,
         )

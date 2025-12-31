@@ -17,4 +17,8 @@ urlpatterns = [
         'user/<str:user_code>/not_found', candfans_user.CandidatesUserNotFoundView.as_view(),
         name='candfans_user_not_found',
     ),
+    path(
+        'user/<str:user_code>/years/<int:year>', candfans_user.CandfansUserYearSummaryView.as_view(),
+        name='candfans_user_year_summary',
+    ),
 ]

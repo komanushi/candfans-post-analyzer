@@ -12,11 +12,13 @@ from ..domain_models import (
     MonthlyPlanStats,
     PlanStats,
     DataSet, PlanPostSummary,
+    YearlyPostStats,
 )
 from .sql_and_models import (
     TotalPostTypeStatsQuery,
     MonthlyStatsQuery,
-    PlanBasedStatsQuery
+    PlanBasedStatsQuery,
+    YearlyStatsQuery,
 )
 
 CHART_COLORS = {
@@ -312,4 +314,42 @@ async def get_monthly_post_stats(user: CandfansUserModel) -> MonthlyStats:
             ]
         ),
     )
+
+
+async def get_yearly_post_stats(user: CandfansUserModel, year: int) -> YearlyPostStats:
+    """Get post statistics for a specific year."""
+    yearly_stats_list: list[YearlyPostStats] = await get_query_results_via_model(
+        YearlyStatsQuery,
+        params=[user.user_id]
+    )
+
+    # Find the stats for the requested year
+    for stats in yearly_stats_list:
+        if stats.year == str(year):
+            return stats
+
+    # If no data found for the year, return empty stats
+    return YearlyPostStats(
+        year=str(year),
+        public_item=0,
+        plan_item=0,
+        individual_item=0,
+        photo_item=0,
+        movie_item=0,
+        free_plan_item=0,
+        paid_plan_item=0,
+        free_movie_time_sec=0.0,
+        paid_movie_time_sec=0.0,
+        free_photo_count=0,
+        paid_photo_count=0,
+    )
+
+
+async def get_all_years_with_posts(user: CandfansUserModel) -> list[str]:
+    """Get all years that have posts for a user."""
+    yearly_stats_list: list[YearlyPostStats] = await get_query_results_via_model(
+        YearlyStatsQuery,
+        params=[user.user_id]
+    )
+    return sorted([stats.year for stats in yearly_stats_list], reverse=True)
 

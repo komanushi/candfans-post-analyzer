@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+	<link rel="stylesheet" type="text/css" href="https://rawgit.com/outboxcraft/beauter/master/beauter.min.css"/>
+  <title>{{ candfans_user.user_code }}さんの{{ year }}年サマリー</title>
+
+  <style>
+    ._brandcolor {
+        background-color: #66AAff !important;
+    }
+    .tooltip {
+        border-bottom: none;
+    }
+    .year-nav {
+        margin: 20px auto;
+        max-width: 800px;
+        text-align: center;
+    }
+    .year-nav a {
+        display: inline-block;
+        margin: 5px;
+        padding: 10px 15px;
+        background-color: #66AAff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .year-nav a.current {
+        background-color: #4488dd;
+        font-weight: bold;
+    }
+    .year-nav a:hover {
+        background-color: #5599ee;
+    }
+    .stats-container {
+        max-width: 800px;
+        margin: 20px auto;
+    }
+    .stat-card {
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .stat-row:last-child {
+        border-bottom: none;
+    }
+    .stat-label {
+        font-weight: bold;
+        color: #555;
+    }
+    .stat-value {
+        color: #333;
+    }
+    .section-title {
+        font-size: 1.5em;
+        color: #333;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #66AAff;
+        padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<ul class="topnav _brandcolor" id="topNav">
+  <li>
+    <a href="{% url 'index' %}" style="width: 120px;">
+      <img src="{% static 'images/logo_horizontal.png' %}">
+    </a>
+  </li>
+</ul>
+
+<div class="container">
+  <h2 class="_alignCenter">{{ candfans_user.username }}さんの{{ year }}年サマリー</h2>
+  <p class="_alignCenter">
+    <a href="{% url 'candfans_user_request' user_code=user_code %}">ユーザー詳細に戻る</a>
+  </p>
+
+  <!-- Year Navigation -->
+  {% if all_years %}
+  <div class="year-nav">
+    <h4>年別サマリー:</h4>
+    {% for available_year in all_years %}
+      {% if available_year == year|stringformat:"s" %}
+        <a href="#" class="current">{{ available_year }}年</a>
+      {% else %}
+        <a href="{% url 'candfans_user_year_summary' user_code=user_code year=available_year %}">{{ available_year }}年</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Statistics Cards -->
+  <div class="stats-container">
+
+    <!-- Basic Stats -->
+    <div class="stat-card">
+      <div class="section-title">基本統計</div>
+      <div class="stat-row">
+        <span class="stat-label">総投稿数</span>
+        <span class="stat-value">{{ yearly_stats.total_item }}件</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">公開投稿</span>
+        <span class="stat-value">{{ yearly_stats.public_item }}件</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">プラン限定投稿</span>
+        <span class="stat-value">{{ yearly_stats.plan_item }}件</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">単品販売</span>
+        <span class="stat-value">{{ yearly_stats.individual_item }}件</span>
+      </div>
+    </div>
+
+    <!-- Content Type Stats -->
+    <div class="stat-card">
+      <div class="section-title">コンテンツタイプ別</div>
+      <div class="stat-row">
+        <span class="stat-label">写真投稿</span>
+        <span class="stat-value">{{ yearly_stats.photo_item }}件</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">動画投稿</span>
+        <span class="stat-value">{{ yearly_stats.movie_item }}件</span>
+      </div>
+    </div>
+
+    <!-- Plan-based Stats -->
+    <div class="stat-card">
+      <div class="section-title">プラン別投稿</div>
+      <div class="stat-row">
+        <span class="stat-label">無料プラン投稿</span>
+        <span class="stat-value">{{ yearly_stats.free_plan_item }}件</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">有料プラン投稿</span>
+        <span class="stat-value">{{ yearly_stats.paid_plan_item }}件</span>
+      </div>
+    </div>
+
+    <!-- Photo Stats -->
+    <div class="stat-card">
+      <div class="section-title">写真枚数統計</div>
+      <div class="stat-row">
+        <span class="stat-label">無料写真枚数</span>
+        <span class="stat-value">{{ yearly_stats.free_photo_count }}枚</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">有料写真枚数</span>
+        <span class="stat-value">{{ yearly_stats.paid_photo_count }}枚</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">合計写真枚数</span>
+        <span class="stat-value">{{ yearly_stats.free_photo_count|add:yearly_stats.paid_photo_count }}枚</span>
+      </div>
+    </div>
+
+    <!-- Movie Stats -->
+    <div class="stat-card">
+      <div class="section-title">動画時間統計</div>
+      <div class="stat-row">
+        <span class="stat-label">無料動画時間</span>
+        <span class="stat-value">
+          {{ yearly_stats.free_movie_time|floatformat:2 }}分
+          {% if yearly_stats.free_movie_hour > 1 %}
+            ({{ yearly_stats.free_movie_hour|floatformat:2 }}時間)
+          {% endif %}
+        </span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">有料動画時間</span>
+        <span class="stat-value">
+          {{ yearly_stats.paid_movie_time|floatformat:2 }}分
+          {% if yearly_stats.paid_movie_hour > 1 %}
+            ({{ yearly_stats.paid_movie_hour|floatformat:2 }}時間)
+          {% endif %}
+        </span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">合計動画時間</span>
+        <span class="stat-value">
+          {{ yearly_stats.free_movie_time|add:yearly_stats.paid_movie_time|floatformat:2 }}分
+          {% with total_hours=yearly_stats.free_movie_hour|add:yearly_stats.paid_movie_hour %}
+            {% if total_hours > 1 %}
+              ({{ total_hours|floatformat:2 }}時間)
+            {% endif %}
+          {% endwith %}
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="_alignCenter" style="margin-top: 40px;">
+    <a href="{% url 'candfans_user_request' user_code=user_code %}">ユーザー詳細に戻る</a> |
+    <a href="{% url 'index' %}">トップに戻る</a>
+  </div>
+</div>
+
+<script src="https://rawgit.com/outboxcraft/beauter/master/beauter.min.js"></script>
+</body>
+</html>

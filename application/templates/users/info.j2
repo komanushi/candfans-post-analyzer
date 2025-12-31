@@ -51,6 +51,18 @@
         <td>最終同期完了時刻</td>
         <td>{{ candfans_user.last_synced_at }}</td>
       </tr>
+      {% if all_years %}
+      <tr>
+        <td>年別サマリー</td>
+        <td>
+          {% for year in all_years %}
+            <a href="{% url 'candfans_user_year_summary' user_code=candfans_user.user_code year=year %}" style="margin-right: 10px;">
+              {{ year }}年
+            </a>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endif %}
     </tbody>
   </table>
   </div>

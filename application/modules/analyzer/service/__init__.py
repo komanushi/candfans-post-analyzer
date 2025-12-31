@@ -18,7 +18,7 @@ from .candfans_plan import (
 from .candfans_post import (
     update_or_create_candfans_post,
 )
-from .candfans_post_stats import get_monthly_post_stats, get_plan_based_stats
+from .candfans_post_stats import get_monthly_post_stats, get_plan_based_stats, get_yearly_post_stats, get_all_years_with_posts
 from .search_history import create_search_history
 from .candfans_daily_ranking import (
     save_creator_ranking,
@@ -47,6 +47,8 @@ __all__ = [
     # post_stats
     'get_monthly_post_stats',
     'get_plan_based_stats',
+    'get_yearly_post_stats',
+    'get_all_years_with_posts',
     # sh
     'create_search_history',
     # candfans_daily_ranking

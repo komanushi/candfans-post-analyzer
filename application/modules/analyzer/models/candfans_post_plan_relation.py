@@ -22,6 +22,9 @@ class CandFansPostPlanRelation(models.Model):
     def __str__(self):
         return f'{self.candfans_plan} of {self.candfans_post}'
 
+    def __hash__(self):
+        return hash((self.candfans_plan_id, self.candfans_post_id))
+
     @classmethod
     async def create(cls, candfans_plan: CandfansPlan, candfans_post: CandfansPost) -> 'CandFansPostPlanRelation':
         return await cls.objects.acreate(

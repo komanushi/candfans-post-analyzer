@@ -31,6 +31,7 @@ async def update_or_create_candfans_post(
                 candfans_post=new_post_map[post.post_id],
                 backnumber_id=plan.backnumber_id
             ))
+    rels = list(set(rels))
     await CandFansPostPlanRelation.bulk_create(rels)
 
     return len(new_post_map.items())
