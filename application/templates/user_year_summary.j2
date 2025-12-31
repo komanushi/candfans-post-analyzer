@@ -108,20 +108,31 @@
     <div class="stat-card">
       <div class="section-title">基本統計</div>
       <div class="stat-row">
-        <span class="stat-label">総投稿数</span>
+        <span class="stat-label">投稿数</span>
         <span class="stat-value">{{ yearly_stats.total_item }}件</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">公開投稿</span>
-        <span class="stat-value">{{ yearly_stats.public_item }}件</span>
+        <span class="stat-label">動画投稿数</span>
+        <span class="stat-value">{{ yearly_stats.movie_item }}件</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">プラン限定投稿</span>
-        <span class="stat-value">{{ yearly_stats.plan_item }}件</span>
+        <span class="stat-label">写真投稿数</span>
+        <span class="stat-value">{{ yearly_stats.photo_item }}件</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">単品販売</span>
-        <span class="stat-value">{{ yearly_stats.individual_item }}件</span>
+        <span class="stat-label">動画総合時間</span>
+        <span class="stat-value">
+          {{ yearly_stats.free_movie_time|add:yearly_stats.paid_movie_time|floatformat:2 }}分
+          {% with total_hours=yearly_stats.free_movie_hour|add:yearly_stats.paid_movie_hour %}
+            {% if total_hours > 1 %}
+              ({{ total_hours|floatformat:2 }}時間)
+            {% endif %}
+          {% endwith %}
+        </span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">写真総枚数</span>
+        <span class="stat-value">{{ yearly_stats.free_photo_count|add:yearly_stats.paid_photo_count }}枚</span>
       </div>
     </div>
 

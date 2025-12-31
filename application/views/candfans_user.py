@@ -76,6 +76,27 @@ class CandidatesUserNotFoundView(View):
         )
 
 
+class CandfansUserLatestYearView(View):
+    async def get(self, request, user_code: str, *args, **kwargs):
+        user_code = user_code.split('#')[0]
+
+        # Get user
+        candfans_user = await analyzer_sv.get_candfans_user_by_user_code(user_code)
+        if not candfans_user:
+            return redirect('candfans_user_not_found', user_code=user_code)
+
+        # Get all available years
+        all_years = await analyzer_sv.get_all_years_with_posts(candfans_user)
+
+        # If no years available, redirect to user detail page
+        if not all_years:
+            return redirect('candfans_user_request', user_code=user_code)
+
+        # Redirect to the latest year (first in the list as they're sorted in reverse)
+        latest_year = all_years[0]
+        return redirect('candfans_user_year_summary', user_code=user_code, year=latest_year)
+
+
 class CandfansUserYearSummaryView(View):
     async def get(self, request, user_code: str, year: int, *args, **kwargs):
         user_code = user_code.split('#')[0]

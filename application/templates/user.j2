@@ -45,6 +45,9 @@
   <button class="tablinks _small" onclick="toTab('info')">基本情報</button>
   <button class="tablinks _small" onclick="toTab('monthly_stats')">投稿月間分析</button>
   <button class="tablinks _small" onclick="toTab('plan_stats')">プラン分析</button>
+  {% if all_years %}
+  <button class="tablinks _small" onclick="location.href='{% url 'candfans_user_latest_year' user_code=user_code %}'">年別サマリー</button>
+  {% endif %}
 </div>
 
 <div id="info" class="tabcontent">
