@@ -24,14 +24,19 @@ async def update_or_create_candfans_post(
         )
     }
     rels = []
+    seen_combinations = set()
     for post in posts:
         for plan in post.plans:
+            # Create unique key from plan_id, post_id, and backnumber_id to detect duplicates
+            combination_key = (plan.plan_id, post.post_id, plan.backnumber_id)
+            if combination_key in seen_combinations:
+                continue
+            seen_combinations.add(combination_key)
             rels.append(CandFansPostPlanRelation(
                 candfans_plan=related_plan_map[plan.plan_id],
                 candfans_post=new_post_map[post.post_id],
                 backnumber_id=plan.backnumber_id
             ))
-    rels = list(set(rels))
     await CandFansPostPlanRelation.bulk_create(rels)
 
     return len(new_post_map.items())
