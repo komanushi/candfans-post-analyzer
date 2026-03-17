@@ -39,6 +39,7 @@ class PostFactory(factory.Factory):
     post_date = Faker().date_time().strftime("%Y-%m-%d %H:%M:%S")
     contents_type = 1
     post_type = PostType.LIMITED_ACCESS_ITEM.value
+    title = factory.Faker('sentence')
     contents_text = factory.Faker('text')
     over_contents_50str = factory.Sequence(lambda n: n)
     price = factory.Sequence(lambda n: n)
@@ -54,7 +55,6 @@ class PostFactory(factory.Factory):
     thumbnail_file = factory.Faker('file_path')
     like_cnt = factory.Sequence(lambda n: n)
     comments_cnt = factory.Sequence(lambda n: n)
-    chip_cnt = factory.Sequence(lambda n: n)
     is_like = factory.Faker('boolean')
     can_browsing = factory.Faker('boolean')
     can_send_chip = factory.Faker('boolean')
@@ -66,7 +66,12 @@ class PostFactory(factory.Factory):
     has_own_thumbnail = factory.Faker('boolean')
     is_on_air = factory.Faker('boolean')
     live_url = factory.Faker('url')
+    audio_time = None
+    sample_time = None
+    share_count = 0
     plans = []
+    attachments = []
+    attachment_length = 0
 
 
 class PostMapFactory(factory.Factory):

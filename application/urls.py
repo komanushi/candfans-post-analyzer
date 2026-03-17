@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import candfans_user, index
+from .views import candfans_user, index, api
 
 
 urlpatterns = [
@@ -24,5 +24,21 @@ urlpatterns = [
     path(
         'user/<str:user_code>/years/<int:year>', candfans_user.CandfansUserYearSummaryView.as_view(),
         name='candfans_user_year_summary',
+    ),
+    # API endpoints
+    path(
+        'api/user/<int:user_id>/monthly-stats',
+        api.MonthlyStatsApiView.as_view(),
+        name='api_monthly_stats',
+    ),
+    path(
+        'api/user/<int:user_id>/plan-stats',
+        api.PlanBasedStatsApiView.as_view(),
+        name='api_plan_stats',
+    ),
+    path(
+        'api/user/<int:user_id>/daily-ranking',
+        api.DailyRankingApiView.as_view(),
+        name='api_daily_ranking',
     ),
 ]
