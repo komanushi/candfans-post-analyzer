@@ -14,9 +14,7 @@
   <link rel="stylesheet" href="https://unpkg.com/cal-heatmap/dist/cal-heatmap.css">
   <script src="{% static 'js/graph.js' %}"></script>
   <script>
-    const summaryMonthlyStats = JSON.parse('{{ summary_monthly_stats_json | escapejs }}');
-    const planBasedStats = JSON.parse('{{ plan_based_stats_json | escapejs }}');
-    const dailyRanking = JSON.parse('{{ daily_ranking_json | escapejs }}')
+    const USER_ID = {{ candfans_user.user_id }};
   </script>
   <style>
     ._brandcolor {

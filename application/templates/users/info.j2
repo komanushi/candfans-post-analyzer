@@ -175,68 +175,72 @@
     <canvas id="daily_ranking"></canvas>
   </div>
   <script>
-    const ctx = document.getElementById('daily_ranking');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: dailyRanking.labels,
-        datasets: dailyRanking.datasets,
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            stacked: true,
+    fetch(`/api/user/${USER_ID}/daily-ranking`)
+      .then(res => res.json())
+      .then(dailyRanking => {
+        const ctx = document.getElementById('daily_ranking');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: dailyRanking.labels,
+            datasets: dailyRanking.datasets,
           },
-          y: {
-            stacked: true,
-            reverse: true,
-            min: 1,
-            max: 101,
-            stepSize: 1,
-            ticks: {
-              callback: function(value){
-                let label = ''
-                if(value === 0){
-                    label = ""
-                }
-                else if(value <= 100){
-                    label = value + '位'
-                }
-                else if(value > 100){
-                    label = "圏外"
-                }
-                else{
-                    label = ""
-                }
-                return  label
-              }
-            }
-          }
-        },
-        plugins: {
-          title: {
-            display: true,
-            text: '{{ candfans_user.username }}さんのランキング遷移'
-          },
-          tooltip: {
-            callbacks: {
-                label: function(context) {
-                    let label = '順位: '
-                    let rank = context.parsed.y
-                    if (parseInt(rank) > 100) {
-                      label += '圏外'
-                    } else {
-                      label += `${context.parsed.y}位`
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                stacked: true,
+              },
+              y: {
+                stacked: true,
+                reverse: true,
+                min: 1,
+                max: 101,
+                stepSize: 1,
+                ticks: {
+                  callback: function(value){
+                    let label = ''
+                    if(value === 0){
+                        label = ""
                     }
-                    return label;
+                    else if(value <= 100){
+                        label = value + '位'
+                    }
+                    else if(value > 100){
+                        label = "圏外"
+                    }
+                    else{
+                        label = ""
+                    }
+                    return  label
+                  }
                 }
-            }
+              }
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: '{{ candfans_user.username }}さんのランキング遷移'
+              },
+              tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = '順位: '
+                        let rank = context.parsed.y
+                        if (parseInt(rank) > 100) {
+                          label += '圏外'
+                        } else {
+                          label += `${context.parsed.y}位`
+                        }
+                        return label;
+                    }
+                }
+              },
+            },
           },
-        },
-      },
-    });
+        });
+      });
 
 
     // インスタンス作成
